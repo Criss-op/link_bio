@@ -6,75 +6,81 @@ from .fonts import Font as font
 from .fonts import FontWeight as font_weight
 
 
-# Constans
-MAX_WIDTH= "650px"
+MAX_WIDTH = "1100px"
+CONTENT_GAP = "2.5rem"
+SECTION_PADDING = "5rem"
 
-# Sizes
 STYLESHEETS = [
-    "https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap",
-    "https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap",
+    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 ]
 
 
 class Size(Enum):
-    SMALL="0.8em"
-    MEDIUM = "0.1em"
-    DEFAULT= "1.3em"
-    LARGE= "1.7em"
-    BIG= "2em"
+    XSMALL = "0.75rem"
+    SMALL = "0.875rem"
+    MEDIUM = "1rem"
+    DEFAULT = "1.125rem"
+    LARGE = "1.5rem"
+    XLARGE = "2rem"
+    XXLARGE = "2.5rem"
 
-#styles
+
 BASE_STYLE = {
     "font_family": font.DEFAULT.value,
     "font_weight": font_weight.LIGHT.value,
     "background_color": color.BACKGROUND.value,
+    "color": text_color.BODY.value,
+    "scroll_behavior": "smooth",
     rx.heading: {
         "color": text_color.HEADER.value,
         "font_family": font.TITLE.value,
-        "font_weight": font_weight.MEDIUM.value
+        "font_weight": font_weight.SEMIBOLD.value,
     },
     rx.button: {
-        "width" : "100%",
-        "height" : "100%",
-        "padding" : Size.SMALL.value,
-        "border_radius": Size.DEFAULT.value,
-        "color": text_color.HEADER.value,
-        "background_color": color.CONTENT.value, 
-        "white_space": "normal",
-        "text_align": "start",
+        "border_radius": "999px",
+        "font_weight": font_weight.MEDIUM.value,
         "_hover": {
-            "background_color": color.SECONDARY.value
-        }
+            "opacity": "0.9",
+        },
     },
     rx.link: {
         "text_decoration": "none",
-        "_hover": {}
-    }
+        "_hover": {
+            "text_decoration": "none",
+        },
+    },
 }
+
 
 navbar_title_style = dict(
     font_family=font.LOGO.value,
-    font_weight=font_weight.MEDIUM.value,
+    font_weight=font_weight.SEMIBOLD.value,
     font_size=Size.LARGE.value,
-    
 )
 
-title_style = dict(
-    width="100%",
-    padding_top=Size.DEFAULT.value,
-    font_size=Size.LARGE.value
+section_heading_style = dict(
+    font_size=["1.8rem", "2.2rem"],
+    margin_bottom="0.5rem",
 )
 
-button_title_style = dict(
-    font_family=font.TITLE.value,
-    font_weight=font_weight.MEDIUM.value,
+section_subtitle_style = dict(
+    color=text_color.MUTED.value,
     font_size=Size.DEFAULT.value,
-    color=text_color.HEADER.value
-)
-button_body_style = dict(
-    font_weight=font_weight.LIGHT.value,
-    font_size=Size.SMALL.value,
-    color=text_color.BODY.value
 )
 
+card_style = dict(
+    background_color=color.SURFACE.value,
+    border=f"1px solid {color.BORDER.value}",
+    border_radius="1rem",
+    padding="1.5rem",
+)
 
+badge_style = dict(
+    background_color=color.SURFACE_LIGHT.value,
+    border=f"1px solid {color.BORDER.value}",
+    border_radius="999px",
+    padding_x="0.75rem",
+    padding_y="0.25rem",
+    font_size=Size.XSMALL.value,
+    color=text_color.MUTED.value,
+)
