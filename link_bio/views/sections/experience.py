@@ -4,10 +4,11 @@ from link_bio.styles.colors import TextColor as text_color
 from link_bio.styles.styles import card_style
 
 
-def experience_card(role: str, context: str, bullets: list[str]) -> rx.Component:
+def experience_card(title: str, context: str, detail: str, bullets: list[str]) -> rx.Component:
     return rx.vstack(
-        rx.text(role, font_size="1.2rem", font_weight="600"),
+        rx.text(title, font_size="1.2rem", font_weight="600"),
         rx.text(context, color=text_color.MUTED.value),
+        rx.text(detail, color=text_color.BODY.value),
         rx.vstack(
             *[rx.text(f"• {item}") for item in bullets],
             spacing="2",
@@ -19,31 +20,27 @@ def experience_card(role: str, context: str, bullets: list[str]) -> rx.Component
     )
 
 
+
 def experience_section() -> rx.Component:
     return section_container(
         "experiencia",
         section_header("Experiencia"),
         rx.grid(
             experience_card(
-                "Gestión de contratos y procesos",
-                "Sector público / entornos administrativos con múltiples actores y cumplimiento normativo.",
+                "2023–2025 | Hospital San Juan de Dios de Cauquenes (Sector público)",
+                "Departamento de Abastecimiento — Compras públicas, licitaciones y contratos.",
+                "Rol: Gestión y coordinación de procesos de abastecimiento.",
                 [
-                    "Coordinación de procesos con unidades técnicas y administrativas.",
-                    "Estandarización de flujos y control de hitos para reducir retrasos.",
-                    "Mejora de trazabilidad documental y orden operativo.",
-                    "Priorización basada en riesgo, plazos y continuidad de servicio.",
+                    "Coordinación de procesos entre áreas técnicas y administrativas.",
+                    "Responsable de la gestión de procesos licitatorios y contratos asociados.",
+                    "Seguimiento de hitos, plazos y respaldos para asegurar trazabilidad.",
+                    "Estandarización de documentos, plantillas y checklists para reducir retrabajo.",
                 ],
             ),
-            experience_card(
-                "Automatización y soporte a la gestión",
-                "Implementación progresiva de herramientas para reducir tareas manuales.",
-                [
-                    "Identificación de tareas repetitivas con alto costo de tiempo.",
-                    "Diseño de automatizaciones y plantillas para acelerar ejecución.",
-                    "Estructuración de información para reporting y control.",
-                ],
-            ),
-            columns=["1", "2"],
+            
+         
+            columns=rx.breakpoints(initial="1", md="1"),
+
             spacing="4",
             width="100%",
         ),

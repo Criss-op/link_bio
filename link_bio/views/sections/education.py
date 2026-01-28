@@ -39,7 +39,7 @@ def education_section() -> rx.Component:
                     "Gestión / Control (placeholder)",
                 ],
             ),
-            columns=["1", "2"],
+            columns=rx.breakpoints(initial="1", md="2"),
             spacing="4",
             width="100%",
         ),

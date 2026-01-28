@@ -37,13 +37,8 @@ def hero_section() -> rx.Component:
                 background_color=color.SURFACE.value,
             ),
             rx.vstack(
-                rx.heading(
-                    BRAND_NAME,
-                    as_="h1",
-                    font_size=["2.4rem", "3.2rem"],
-                    font_weight="700",
-                ),
-                rx.text(FULL_NAME, font_size=["1.2rem", "1.4rem"], color=text_color.MUTED.value),
+                
+                rx.text(FULL_NAME, font_size=["1.2rem", "1.4rem"], color=text_color.HEADER.value),
                 rx.text(TAGLINE, font_size="1rem", color=color.PRIMARY.value, font_weight="600"),
                 rx.hstack(
                     *social_links,
@@ -51,9 +46,10 @@ def hero_section() -> rx.Component:
                     flex_wrap="wrap",
                 ),
                 rx.text(
-                    "Soy Ingeniero en Informática con experiencia en gestión de procesos, compras públicas y entornos operativos complejos. "
-                    "Trabajo en la intersección entre gestión, tecnología y automatización, enfocándome en ordenar sistemas, optimizar flujos y "
-                    "diseñar soluciones prácticas con impacto real.",
+                    """Hola, soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos. 
+                    Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan. 
+                    Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos 
+                    y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
                     color=text_color.BODY.value,
                 ),
                 rx.hstack(
@@ -84,7 +80,7 @@ def hero_section() -> rx.Component:
                 spacing="4",
                 align_items="start",
             ),
-            direction=["column", "row"],
+            direction=rx.breakpoints(initial="column", md="row"),
             spacing="6",
             align="center",
             width="100%",

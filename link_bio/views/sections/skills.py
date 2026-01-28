@@ -37,27 +37,29 @@ def skills_section() -> rx.Component:
         skill_list("Técnicas", technical),
         skill_list("Profesionales", professional),
         skill_list("Personales aplicadas", personal),
-        columns=["1", "3"],
+        columns=rx.breakpoints(initial="1", md="3"),
         spacing="4",
         width="100%",
         display=["none", "none", "grid"],
     )
 
-    mobile_accordion = rx.accordion(
-        rx.accordion.item(
-            rx.accordion.header(rx.accordion.trigger("Técnicas")),
-            rx.accordion.content(rx.vstack(*[rx.text(item) for item in technical], spacing="2")),
+    mobile_accordion = rx.vstack(
+        rx.el.details(
+            rx.el.summary("Técnicas"),
+            rx.vstack(*[rx.text(item) for item in technical], spacing="2"),
+            **card_style,
         ),
-        rx.accordion.item(
-            rx.accordion.header(rx.accordion.trigger("Profesionales")),
-            rx.accordion.content(rx.vstack(*[rx.text(item) for item in professional], spacing="2")),
+        rx.el.details(
+            rx.el.summary("Profesionales"),
+            rx.vstack(*[rx.text(item) for item in professional], spacing="2"),
+            **card_style,
         ),
-        rx.accordion.item(
-            rx.accordion.header(rx.accordion.trigger("Personales aplicadas")),
-            rx.accordion.content(rx.vstack(*[rx.text(item) for item in personal], spacing="2")),
+        rx.el.details(
+            rx.el.summary("Personales aplicadas"),
+            rx.vstack(*[rx.text(item) for item in personal], spacing="2"),
+            **card_style,
         ),
-        type="single",
-        collapsible=True,
+        spacing="3",
         width="100%",
         display=["block", "block", "none"],
     )

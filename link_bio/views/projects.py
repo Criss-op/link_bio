@@ -33,7 +33,7 @@ def project_item(title: str, status: str, date: str) -> rx.Component:
             align_items="start",
         ),
         width="100%",
-        justify="space-between",
+        justify="between",
     )
 
 

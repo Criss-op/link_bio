@@ -13,5 +13,6 @@ class Color(Enum):
 class TextColor(Enum):
     HEADER = "#F5F7FA"
     BODY = "#C7CFD9"
+    PRIMARY = "#3B82F6"
     MUTED = "#9BA6B2"
     FOOTER = "#8D97A3"

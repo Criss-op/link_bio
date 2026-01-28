@@ -17,7 +17,7 @@ def methodologies_section() -> rx.Component:
             rx.box("Estandarización y checklists", **card_style),
             rx.box("Mejora continua (iteración)", **card_style),
             rx.box("Automatización incremental", **card_style),
-            columns=["1", "2"],
+            columns=rx.breakpoints(initial="1", md="2"),
             spacing="4",
             width="100%",
         ),
