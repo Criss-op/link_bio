@@ -11,7 +11,8 @@ CONTENT_GAP = "2.5rem"
 SECTION_PADDING = "5rem"
 
 STYLESHEETS = [
-    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
+    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap",
+    "/ui_effects.css",
 ]
 
 
@@ -27,14 +28,14 @@ class Size(Enum):
 
 BASE_STYLE = {
     "font_family": font.DEFAULT.value,
-    "font_weight": font_weight.LIGHT.value,
+    "font_weight": font_weight.REGULAR.value,
     "background_color": color.BACKGROUND.value,
     "color": text_color.BODY.value,
     "scroll_behavior": "smooth",
     rx.heading: {
         "color": text_color.HEADER.value,
         "font_family": font.TITLE.value,
-        "font_weight": font_weight.SEMIBOLD.value,
+        "font_weight": font_weight.BOLD.value,
     },
     rx.button: {
         "border_radius": "999px",
@@ -59,7 +60,7 @@ navbar_title_style = dict(
 )
 
 section_heading_style = dict(
-    font_size=["1.8rem", "2.2rem"],
+    font_size=rx.breakpoints(initial="1.8rem", md="2.2rem"),
     margin_bottom="0.5rem",
 )
 
@@ -71,8 +72,11 @@ section_subtitle_style = dict(
 card_style = dict(
     background_color=color.SURFACE.value,
     border=f"1px solid {color.BORDER.value}",
-    border_radius="1rem",
+    border_radius="1.1rem",
     padding="1.5rem",
+    box_shadow="0 10px 30px rgba(2, 12, 27, 0.25)",
+    transition="transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease",
+    class_name="card",
 )
 
 badge_style = dict(

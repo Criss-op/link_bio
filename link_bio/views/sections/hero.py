@@ -27,18 +27,27 @@ def hero_section() -> rx.Component:
     return section_container(
         "inicio",
         rx.flex(
-            rx.image(
-                src="avatar_cris_vector_white.png",
-                alt=FULL_NAME,
-                width=["180px", "220px"],
-                height=["180px", "220px"],
-                border_radius="24px",
-                border=f"1px solid {color.BORDER.value}",
-                background_color=color.SURFACE.value,
+            rx.box(
+                rx.image(
+                    src="avatar_cris_vector_white.png",
+                    alt=FULL_NAME,
+                    width=rx.breakpoints(initial="180px", md="220px"),
+                    height=rx.breakpoints(initial="180px", md="220px"),
+                    border_radius="24px",
+                    border=f"1px solid {color.BORDER.value}",
+                    background_color=color.SURFACE.value,
+                    id="cris-avatar",
+                ),
+                id="cris-avatar-wrap",
+                class_name="avatar-wrap",
             ),
             rx.vstack(
                 
-                rx.text(FULL_NAME, font_size=["1.2rem", "1.4rem"], color=text_color.HEADER.value),
+                rx.text(
+                    FULL_NAME,
+                    font_size=rx.breakpoints(initial="1.2rem", md="1.4rem"),
+                    color=text_color.HEADER.value,
+                ),
                 rx.text(TAGLINE, font_size="1rem", color=color.PRIMARY.value, font_weight="600"),
                 rx.hstack(
                     *social_links,
@@ -84,5 +93,10 @@ def hero_section() -> rx.Component:
             spacing="6",
             align="center",
             width="100%",
+        ),
+        rx.box(
+            rx.icon(tag="chevron-down", size=28),
+            class_name="scroll-indicator",
+            color=text_color.MUTED.value,
         ),
     )

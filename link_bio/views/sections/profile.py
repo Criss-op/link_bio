@@ -1,6 +1,7 @@
 import reflex as rx
 from link_bio.components.section import section_container, section_header
 from link_bio.styles.colors import TextColor as text_color
+from link_bio.styles.styles import card_style
 
 
 def profile_section() -> rx.Component:
@@ -24,5 +25,6 @@ def profile_section() -> rx.Component:
             rx.text("Decidir con datos y contexto"),
             spacing="2",
             color=text_color.PRIMARY.value,
+            **card_style,
         ),
     )

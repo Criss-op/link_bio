@@ -1,5 +1,5 @@
 import reflex as rx
-from link_bio.constants import BRAND_NAME
+from link_bio.state import UIState
 from link_bio.styles.colors import Color as color
 from link_bio.styles.colors import TextColor as text_color
 from link_bio.styles.styles import MAX_WIDTH
@@ -13,57 +13,67 @@ NAV_ITEMS = [
     ("Habilidades", "#habilidades"),
     ("Metodologías", "#metodologias"),
     ("Objetivos", "#objetivos"),
-    ("Contacto", "#contacto"),
 ]
-
-
-class NavbarState(rx.State):
-    mobile_open: bool = False
-
-    def toggle_menu(self):
-        self.mobile_open = not self.mobile_open
-
-    def close_menu(self):
-        self.mobile_open = False
 
 
 def nav_link(label: str, href: str) -> rx.Component:
     return rx.link(
         label,
         href=href,
+        class_name="navbar-link",
         color=text_color.BODY.value,
         font_weight="500",
         _hover={"color": color.PRIMARY.value},
-        on_click=NavbarState.close_menu,
+        on_click=UIState.close_menu,
     )
 
 
 def navbar() -> rx.Component:
     desktop_links = rx.hstack(
         *[nav_link(label, href) for label, href in NAV_ITEMS],
+        rx.button(
+            "Contacto",
+            class_name="navbar-link",
+            color=text_color.BODY.value,
+            font_weight="500",
+            variant="ghost",
+            _hover={"color": color.PRIMARY.value},
+            on_click=UIState.open_contact,
+        ),
         rx.link(
             "Proyectos 🔒",
             href="/projects",
+            class_name="navbar-link",
             color=text_color.BODY.value,
             font_weight="600",
             _hover={"color": color.PRIMARY.value},
         ),
-        spacing="5",
+        spacing="4",
         align="center",
         display=["none", "none", "flex"],
     )
 
     mobile_menu = rx.cond(
-        NavbarState.mobile_open,
+        UIState.mobile_open,
         rx.vstack(
             *[nav_link(label, href) for label, href in NAV_ITEMS],
+            rx.button(
+                "Contacto",
+                class_name="navbar-link",
+                color=text_color.BODY.value,
+                font_weight="500",
+                variant="ghost",
+                _hover={"color": color.PRIMARY.value},
+                on_click=UIState.open_contact,
+            ),
             rx.link(
                 "Proyectos 🔒",
                 href="/projects",
+                class_name="navbar-link",
                 color=text_color.BODY.value,
                 font_weight="600",
                 _hover={"color": color.PRIMARY.value},
-                on_click=NavbarState.close_menu,
+                on_click=UIState.close_menu,
             ),
             spacing="4",
             align_items="start",
@@ -76,38 +86,34 @@ def navbar() -> rx.Component:
         rx.center(
             rx.box(
                 rx.hstack(
-                    rx.text(
-                        BRAND_NAME,
-                        color=text_color.HEADER.value,
-                        font_weight="600",
-                        font_size="1.2rem",
-                    ),
-                    rx.spacer(),
                     desktop_links,
                     rx.button(
                         rx.icon(tag="menu", size=22),
                         variant="ghost",
                         color=text_color.HEADER.value,
                         display=["flex", "flex", "none"],
-                        on_click=NavbarState.toggle_menu,
+                        on_click=UIState.toggle_menu,
                     ),
                     width="100%",
                     align="center",
+                    justify="between",
                 ),
                 rx.box(
                     mobile_menu,
                     display=["block", "block", "none"],
                 ),
                 max_width=MAX_WIDTH,
-                width="100%",
+                width=rx.breakpoints(initial="calc(100% - 2rem)", md="fit-content"),
                 padding_x="1.5rem",
+                class_name="navbar-pill",
             ),
             width="100%",
         ),
-        position="sticky",
+        class_name="navbar-wrapper",
+        position="fixed",
         top="0",
+        left="0",
+        right="0",
         z_index="999",
-        background_color=color.BACKGROUND.value,
-        border_bottom=f"1px solid {color.BORDER.value}",
         padding_y="0.75rem",
     )
