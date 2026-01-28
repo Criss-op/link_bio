@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Lanzador para Git Bash/WSL: usa el python del venv del proyecto
+cd "$(dirname "$0")"
+if [ -x "./venv/Scripts/python.exe" ]; then
+  ./venv/Scripts/python.exe -m reflex "$@"
+elif [ -x "./venv/bin/python" ]; then
+  ./venv/bin/python -m reflex "$@"
+else
+  python -m reflex "$@"
+fi
