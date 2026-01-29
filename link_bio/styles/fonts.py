@@ -1,11 +1,16 @@
-from enum import Enum 
+from enum import Enum
+
 
 class Font(Enum):
-    DEFAULT = "Poppins"
-    TITLE = "Poppins"
-    LOGO = "Comfortaa"
+    DEFAULT = "Inter"
+    TITLE = "Inter"
+    LOGO = "Inter"
+    MONO = "Fira Code"
+
 
 class FontWeight(Enum):
     LIGHT = "300"
+    REGULAR = "400"
     MEDIUM = "500"
-    
+    SEMIBOLD = "600"
+    BOLD = "700"

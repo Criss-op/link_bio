@@ -1,12 +1,18 @@
 from enum import Enum
 
+
 class Color(Enum):
-    PRIMARY = "#14A1F0"
-    SECONDARY = "#087EC4"
-    BACKGROUND = "#0C151D"
-    CONTENT = "#171F26"
-    
+    PRIMARY = "#64ffda"
+    PRIMARY_DARK = "#64ffda"
+    BACKGROUND = "#0a192f"
+    SURFACE = "#112240"
+    SURFACE_LIGHT = "#233554"
+    BORDER = "#233554"
+
+
 class TextColor(Enum):
-    HEADER = "#F1F2F4"
-    BODY = "#C3C7CB"
-    FOOTER = "#A3ABB2"
+    HEADER = "#e6f1ff"
+    BODY = "#a8b2d1"
+    PRIMARY = "#64ffda"
+    MUTED = "#8892b0"
+    FOOTER = "#8892b0"

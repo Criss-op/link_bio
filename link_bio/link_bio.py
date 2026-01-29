@@ -1,34 +1,56 @@
 import reflex as rx
-from link_bio.components.navbar import navbar
+from link_bio.components.contact_overlay import contact_overlay
 from link_bio.components.footer import footer
-from link_bio.views.header.header import header
-from link_bio.views.links.links import links
-import link_bio.styles.styles as styles
-from link_bio.styles.styles import Size as Size
+from link_bio.components.navbar import navbar
+from link_bio.components.side_rails import side_rails
+from link_bio.constants import TAGLINE
+from link_bio.styles import styles
+from link_bio.views.projects import projects_page
+from link_bio.views.sections import (
+    contact_section,
+    education_section,
+    experience_section,
+    hero_section,
+    methodologies_section,
+    objectives_section,
+    profile_section,
+    skills_section,
+)
 
 
-class State(rx.State):
-    pass
-
-def index()-> rx.Component:
+def index() -> rx.Component:
     return rx.box(
+        rx.el.div(class_name="cursor-spotlight"),
         navbar(),
-        rx.center(
-            rx.vstack(
-            header(),
-            links(),
-            max_width=styles.MAX_WIDTH,
-            width="100%",
-            margin_y=Size.BIG.value,
-            padding=Size.BIG.value
-        )   
-    ),
-        footer()
+        side_rails(),
+        rx.box(
+            hero_section(),
+            profile_section(),
+            experience_section(),
+            education_section(),
+            skills_section(),
+            methodologies_section(),
+            objectives_section(),
+            contact_section(),
+            footer(),
+            id="page-scroll",
+            class_name="scroll-container",
+        ),
+        contact_overlay(),
+        rx.script(src="/cursor_spotlight.js"),
+        rx.script(src="/avatar_tilt.js"),
+        rx.script(src="/ui_effects.js"),
     )
 
 
 app = rx.App(
     stylesheets=styles.STYLESHEETS,
-    style=styles.BASE_STYLE
+    style=styles.BASE_STYLE,
 )
-app.add_page(index)
+
+app.add_page(
+    index,
+    title=f"Cris | {TAGLINE}",
+    description="Perfil profesional de Cristóbal ‘Cris’ Opazo: procesos, automatización, estrategia y gestión.",
+)
+app.add_page(projects_page, route="/projects", title="Proyectos privados")

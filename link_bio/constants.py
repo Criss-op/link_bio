@@ -1,0 +1,7 @@
+BRAND_NAME = "Cris"
+FULL_NAME = "Cristóbal Opazo"
+TAGLINE = "Process · Automation · Strategy · Management"
+LINKEDIN_URL = "{LINKEDIN_URL}"
+GITHUB_URL = "{GITHUB_URL}"
+EMAIL_ADDRESS = "{EMAIL_ADDRESS}"
+CV_URL = "{CV_URL}"
