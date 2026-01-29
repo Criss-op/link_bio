@@ -73,4 +73,5 @@ def footer() -> rx.Component:
         border_top=f"1px solid {color.BORDER.value}",
         background_color=color.SURFACE.value,
         padding_x="1.5rem",
+        id="footer",
     )

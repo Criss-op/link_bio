@@ -6,7 +6,7 @@ from .fonts import Font as font
 from .fonts import FontWeight as font_weight
 
 
-MAX_WIDTH = "1100px"
+MAX_WIDTH = "980px"
 CONTENT_GAP = "2.5rem"
 SECTION_PADDING = "5rem"
 

@@ -110,6 +110,7 @@ def navbar() -> rx.Component:
             width="100%",
         ),
         class_name="navbar-wrapper",
+        id="navbar",
         position="fixed",
         top="0",
         left="0",
