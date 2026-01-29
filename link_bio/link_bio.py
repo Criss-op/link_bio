@@ -2,6 +2,7 @@ import reflex as rx
 from link_bio.components.contact_overlay import contact_overlay
 from link_bio.components.footer import footer
 from link_bio.components.navbar import navbar
+from link_bio.components.side_rails import side_rails
 from link_bio.constants import TAGLINE
 from link_bio.styles import styles
 from link_bio.views.projects import projects_page
@@ -21,6 +22,7 @@ def index() -> rx.Component:
     return rx.box(
         rx.el.div(class_name="cursor-spotlight"),
         navbar(),
+        side_rails(),
         rx.box(
             hero_section(),
             profile_section(),

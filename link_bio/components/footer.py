@@ -8,6 +8,7 @@ from link_bio.styles.styles import MAX_WIDTH
 
 def footer() -> rx.Component:
     return rx.box(
+        rx.box(class_name="footer-accent"),
         rx.center(
             rx.vstack(
                 rx.hstack(
@@ -18,28 +19,39 @@ def footer() -> rx.Component:
                             font_weight="600",
                         ),
                         rx.text(TAGLINE, color=text_color.FOOTER.value),
+                        rx.text(
+                            "Built with Reflex • Process / Automation / Strategy",
+                            class_name="footer-microcopy",
+                        ),
                         spacing="2",
                         align_items="start",
+                        max_width="360px",
                     ),
-                    rx.vstack(
-                        rx.text("Navegación", color=text_color.HEADER.value, font_weight="600"),
-                        rx.link("Inicio", href="#inicio"),
-                        rx.link("Perfil", href="#perfil"),
-                        rx.link("Experiencia", href="#experiencia"),
-                        rx.link("Formación", href="#formacion"),
-                        rx.link("Habilidades", href="#habilidades"),
-                        spacing="2",
-                        align_items="start",
-                        color=text_color.FOOTER.value,
-                    ),
-                    rx.vstack(
-                        rx.text("Contacto", color=text_color.HEADER.value, font_weight="600"),
-                        rx.text(EMAIL_ADDRESS, color=text_color.FOOTER.value),
-                        rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
-                        rx.link("GitHub", href=GITHUB_URL, is_external=True),
-                        spacing="2",
-                        align_items="start",
-                        color=text_color.FOOTER.value,
+                    rx.hstack(
+                        rx.vstack(
+                            rx.text("Navegación", color=text_color.HEADER.value, font_weight="600"),
+                            rx.link("Inicio", href="#inicio"),
+                            rx.link("Perfil", href="#perfil"),
+                            rx.link("Experiencia", href="#experiencia"),
+                            rx.link("Formación", href="#formacion"),
+                            rx.link("Habilidades", href="#habilidades"),
+                            spacing="2",
+                            align_items="start",
+                            color=text_color.FOOTER.value,
+                        ),
+                        rx.vstack(
+                            rx.text("Contacto", color=text_color.HEADER.value, font_weight="600"),
+                            rx.text(EMAIL_ADDRESS, color=text_color.FOOTER.value),
+                            rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
+                            rx.link("GitHub", href=GITHUB_URL, is_external=True),
+                            spacing="2",
+                            align_items="start",
+                            color=text_color.FOOTER.value,
+                        ),
+                        spacing="6",
+                        width="100%",
+                        justify="between",
+                        flex_wrap="wrap",
                     ),
                     spacing="6",
                     width="100%",

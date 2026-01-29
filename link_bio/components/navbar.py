@@ -50,7 +50,7 @@ def navbar() -> rx.Component:
         ),
         spacing="4",
         align="center",
-        display=["none", "none", "flex"],
+        display=rx.breakpoints(initial="none", md="none", lg="flex"),
     )
 
     mobile_menu = rx.cond(
@@ -91,7 +91,7 @@ def navbar() -> rx.Component:
                         rx.icon(tag="menu", size=22),
                         variant="ghost",
                         color=text_color.HEADER.value,
-                        display=["flex", "flex", "none"],
+                        display=rx.breakpoints(initial="flex", md="flex", lg="none"),
                         on_click=UIState.toggle_menu,
                     ),
                     width="100%",
@@ -100,7 +100,7 @@ def navbar() -> rx.Component:
                 ),
                 rx.box(
                     mobile_menu,
-                    display=["block", "block", "none"],
+                    display=rx.breakpoints(initial="block", md="block", lg="none"),
                 ),
                 max_width=MAX_WIDTH,
                 width=rx.breakpoints(initial="calc(100% - 2rem)", md="fit-content"),

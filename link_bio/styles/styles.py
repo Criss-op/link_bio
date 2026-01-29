@@ -70,12 +70,12 @@ section_subtitle_style = dict(
 )
 
 card_style = dict(
-    background_color=color.SURFACE.value,
-    border=f"1px solid {color.BORDER.value}",
+    background_color="transparent",
+    border="1px solid transparent",
     border_radius="1.1rem",
     padding="1.5rem",
-    box_shadow="0 10px 30px rgba(2, 12, 27, 0.25)",
-    transition="transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease",
+    box_shadow="none",
+    transition="transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease",
     class_name="card",
 )
 

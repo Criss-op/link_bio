@@ -5,15 +5,22 @@
     return;
   }
 
-  const updateScrollState = () => {
-    const scrolled = scrollContainer.scrollTop > 10;
-    if (scrolled) {
-      root.dataset.scrolled = "true";
-    } else {
-      delete root.dataset.scrolled;
-    }
-  };
+  const hero = document.getElementById("inicio");
+  if (!hero) {
+    return;
+  }
 
-  updateScrollState();
-  scrollContainer.addEventListener("scroll", updateScrollState, { passive: true });
+  root.dataset.inHero = "true";
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      root.dataset.inHero = entry.isIntersecting ? "true" : "false";
+    },
+    {
+      root: scrollContainer,
+      threshold: 0.4,
+    },
+  );
+
+  observer.observe(hero);
 })();

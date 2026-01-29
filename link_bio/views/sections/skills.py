@@ -40,7 +40,7 @@ def skills_section() -> rx.Component:
         columns=rx.breakpoints(initial="1", md="3"),
         spacing="4",
         width="100%",
-        display=["none", "none", "grid"],
+        display=rx.breakpoints(initial="none", md="none", lg="grid"),
     )
 
     mobile_accordion = rx.vstack(
@@ -61,7 +61,7 @@ def skills_section() -> rx.Component:
         ),
         spacing="3",
         width="100%",
-        display=["block", "block", "none"],
+        display=rx.breakpoints(initial="block", md="block", lg="none"),
     )
 
     return section_container(

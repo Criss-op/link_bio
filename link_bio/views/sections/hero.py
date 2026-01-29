@@ -31,24 +31,30 @@ def hero_section() -> rx.Component:
                 rx.image(
                     src="avatar_cris_vector_white.png",
                     alt=FULL_NAME,
-                    width=rx.breakpoints(initial="180px", md="220px"),
-                    height=rx.breakpoints(initial="180px", md="220px"),
+                    width=rx.breakpoints(initial="200px", md="240px", lg="260px"),
+                    height=rx.breakpoints(initial="200px", md="240px", lg="260px"),
                     border_radius="24px",
                     border=f"1px solid {color.BORDER.value}",
                     background_color=color.SURFACE.value,
+                    object_fit="contain",
                     id="cris-avatar",
                 ),
                 id="cris-avatar-wrap",
                 class_name="avatar-wrap",
+                flex_shrink="0",
             ),
             rx.vstack(
-                
                 rx.text(
                     FULL_NAME,
-                    font_size=rx.breakpoints(initial="1.2rem", md="1.4rem"),
+                    font_size=rx.breakpoints(initial="1.6rem", md="2.1rem", lg="2.4rem"),
                     color=text_color.HEADER.value,
                 ),
-                rx.text(TAGLINE, font_size="1rem", color=color.PRIMARY.value, font_weight="600"),
+                rx.text(
+                    TAGLINE,
+                    font_size=rx.breakpoints(initial="1rem", md="1.1rem"),
+                    color=color.PRIMARY.value,
+                    font_weight="600",
+                ),
                 rx.hstack(
                     *social_links,
                     spacing="4",
@@ -60,13 +66,15 @@ def hero_section() -> rx.Component:
                     Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos 
                     y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
                     color=text_color.BODY.value,
+                    font_size=rx.breakpoints(initial="1rem", md="1.05rem", lg="1.1rem"),
+                    line_height="1.7",
                 ),
                 rx.hstack(
                     rx.link(
                         rx.button(
                             "Ver Perfil",
                             background_color=color.PRIMARY.value,
-                            color="white",
+                            color="#0a192f",
                             padding_x="1.5rem",
                             padding_y="0.75rem",
                         ),
@@ -88,14 +96,16 @@ def hero_section() -> rx.Component:
                 ),
                 spacing="4",
                 align_items="start",
+                max_width="560px",
             ),
             direction=rx.breakpoints(initial="column", md="row"),
             spacing="6",
             align="center",
             width="100%",
+            class_name="hero-layout",
         ),
         rx.box(
-            rx.icon(tag="chevron-down", size=28),
+            rx.icon(tag="chevron-down", size=36),
             class_name="scroll-indicator",
             color=text_color.MUTED.value,
         ),
