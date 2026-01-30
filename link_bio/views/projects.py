@@ -3,24 +3,7 @@ import reflex as rx
 from link_bio.styles.colors import Color as color
 from link_bio.styles.colors import TextColor as text_color
 from link_bio.styles.styles import MAX_WIDTH, card_style
-
-
-class ProjectsState(rx.State):
-    password_input: str = ""
-    authorized: bool = False
-    error_message: str = ""
-
-    def validate_password(self):
-        expected_password = os.environ.get("PROJECTS_PASSWORD", "")
-        if self.password_input and expected_password and self.password_input == expected_password:
-            self.authorized = True
-            self.error_message = ""
-        else:
-            self.authorized = False
-            self.error_message = "Contraseña incorrecta."
-
-    def clear_error(self):
-        self.error_message = ""
+from link_bio.state import ProjectsState
 
 
 def project_item(title: str, status: str, date: str) -> rx.Component:
