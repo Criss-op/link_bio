@@ -28,7 +28,20 @@ def nav_link(label: str, href: str) -> rx.Component:
     )
 
 
+def drawer_link(label: str, href: str) -> rx.Component:
+    return rx.link(
+        label,
+        href=href,
+        class_name="mobile-menu-link",
+        color=text_color.HEADER.value,
+        font_weight="600",
+        _hover={"color": color.PRIMARY.value},
+        on_click=UIState.close_menu,
+    )
+
+
 def navbar() -> rx.Component:
+    # ---------------- Desktop (lg+) ----------------
     desktop_links = rx.hstack(
         *[nav_link(label, href) for label, href in NAV_ITEMS],
         rx.button(
@@ -39,6 +52,7 @@ def navbar() -> rx.Component:
             variant="ghost",
             _hover={"color": color.PRIMARY.value},
             on_click=UIState.open_contact,
+            style={"marginLeft": "0.35rem"},
         ),
         rx.link(
             "Proyectos 🔒",
@@ -47,74 +61,121 @@ def navbar() -> rx.Component:
             color=text_color.BODY.value,
             font_weight="600",
             _hover={"color": color.PRIMARY.value},
+            style={"marginLeft": "0.35rem"},
         ),
         spacing="4",
         align="center",
         display=rx.breakpoints(initial="none", md="none", lg="flex"),
     )
 
-    mobile_menu = rx.cond(
-        UIState.mobile_open,
-        rx.vstack(
-            *[nav_link(label, href) for label, href in NAV_ITEMS],
-            rx.button(
-                "Contacto",
-                class_name="navbar-link",
-                color=text_color.BODY.value,
-                font_weight="500",
-                variant="ghost",
-                _hover={"color": color.PRIMARY.value},
-                on_click=UIState.open_contact,
+    desktop_pill = rx.center(
+        rx.box(
+            rx.hstack(
+                desktop_links,
+                width="100%",
+                align="center",
+                justify="between",
             ),
-            rx.link(
-                "Proyectos 🔒",
-                href="/projects",
-                class_name="navbar-link",
-                color=text_color.BODY.value,
-                font_weight="600",
-                _hover={"color": color.PRIMARY.value},
+            max_width=MAX_WIDTH,
+            width="fit-content",
+            padding_x="1.5rem",
+            class_name="navbar-pill",
+        ),
+        width="100%",
+        display=rx.breakpoints(initial="none", md="none", lg="flex"),
+    )
+
+    # ---------------- Mobile/Tablet (<lg) ----------------
+    mobile_bar = rx.hstack(
+        rx.button(
+            rx.icon(tag="menu",size=24),
+            variant="ghost",
+            color=text_color.HEADER.value,
+            on_click=UIState.toggle_menu,
+            style={"padding": "0.55rem"},
+        ),
+        width="100%",
+        align="center",
+        justify="end",
+    )
+
+    mobile_pill = rx.box(
+        rx.box(
+            mobile_bar,
+            width="fit-content",
+            padding_x="1.5rem",   # padding interno del pill
+            class_name="navbar-pill",
+            margin_right="2rem",
+        ),
+        width="100%",
+        display=rx.breakpoints(initial="flex", md="flex", lg="none"),
+        justify_content="flex-end",
+
+    )
+
+    # ---------------- Drawer full height + backdrop ----------------
+    mobile_drawer = rx.cond(
+        UIState.mobile_open,
+        rx.box(
+            rx.box(
+                class_name="mobile-menu-backdrop",
                 on_click=UIState.close_menu,
             ),
-            spacing="4",
-            align_items="start",
-            padding_top="1rem",
-            padding_bottom="1rem",
+            rx.box(
+                rx.button(
+                    rx.icon(tag="x", size=24),
+                    variant="ghost",
+                    color=text_color.HEADER.value,
+                    on_click=UIState.close_menu,
+                    class_name="drawer-close",
+                    style={"padding": "0.35rem"},
+                ),
+                 rx.vstack(
+                    *[drawer_link(label, href) for label, href in NAV_ITEMS],
+                    rx.button(
+                        "Contacto",
+                        class_name="mobile-menu-link",
+                        color=text_color.HEADER.value,
+                        font_weight="600",
+                        variant="ghost",
+                        _hover={"color": color.PRIMARY.value},
+                        on_click=UIState.open_contact_from_menu,
+                        width="100%",
+                    ),
+                     rx.link(
+                        "Proyectos 🔒",
+                        href="/projects",
+                        class_name="mobile-menu-link",
+                        color=text_color.HEADER.value,
+                        font_weight="600",
+                        _hover={"color": color.PRIMARY.value},
+                        on_click=UIState.close_menu,
+                     ),
+                    spacing="3",
+                    align_items="start",
+                    width="100%",
+                    class_name="drawer-links",
+                ),
+                class_name="mobile-menu-panel",
+            ),
+            class_name="mobile-menu-overlay",
+            display=rx.breakpoints(initial="flex", md="flex", lg="none"),
         ),
     )
 
+    # ---------------- Wrapper fixed ----------------
     return rx.box(
-        rx.center(
-            rx.box(
-                rx.hstack(
-                    desktop_links,
-                    rx.button(
-                        rx.icon(tag="menu", size=22),
-                        variant="ghost",
-                        color=text_color.HEADER.value,
-                        display=rx.breakpoints(initial="flex", md="flex", lg="none"),
-                        on_click=UIState.toggle_menu,
-                    ),
-                    width="100%",
-                    align="center",
-                    justify="between",
-                ),
-                rx.box(
-                    mobile_menu,
-                    display=rx.breakpoints(initial="block", md="block", lg="none"),
-                ),
-                max_width=MAX_WIDTH,
-                width=rx.breakpoints(initial="calc(100% - 2rem)", md="fit-content"),
-                padding_x="1.5rem",
-                class_name="navbar-pill",
-            ),
-            width="100%",
+        rx.box(
+            desktop_pill,
+            mobile_pill,
+            class_name="navbar-wrapper",
+            id="navbar",
+            position="fixed",
+            top="0",
+            left="0",
+            right="0",
+            z_index="999",
+            padding_y=rx.breakpoints(initial="1rem", md="1rem", lg="0.75rem"),
         ),
-        class_name="navbar-wrapper",
-        id="navbar",
-        position="fixed",
-        top="0",
-        left="0",
-        right="0",
-        z_index="999",
-        padding_y="0.75rem",
+        mobile_drawer,
     )

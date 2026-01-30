@@ -16,6 +16,10 @@ class UIState(rx.State):
 
     def close_contact(self):
         self.contact_open = False
+    
+    def open_contact_from_menu(self):
+        self.contact_open = True
+        self.mobile_open = False
 
 
 class ProjectsState(rx.State):
