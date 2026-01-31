@@ -1,18 +1,19 @@
 :root {
    --mx: 50%;
    --my: 40%;
-   --navbar-safe-top: 116px;
+   --navbar-safe-top: 116px; /* si queda mucha separación baja a 108-112 */
 }
 
 body {
    background-color: #0a192f;
 }
 
+/* ===== Cursor spotlight (debe ir SOBRE estrellas, BAJO contenido) ===== */
 .cursor-spotlight {
    position: fixed;
    inset: 0;
    pointer-events: none;
-   z-index: 0;
+   z-index: 1;
    background: radial-gradient(
       circle 650px at var(--mx) var(--my),
       rgba(100, 255, 218, 0.12) 0%,
@@ -21,16 +22,48 @@ body {
    );
 }
 
-#page-scroll,
+/* ===== Global stars canvas (debe ir al fondo, pero visible) ===== */
+#site-stars {
+   position: fixed;
+   inset: 0;
+   pointer-events: none;
+   z-index: 0;
+   overflow: hidden;
+
+   /* opcional: no ensucia el extremo inferior */
+   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
+   mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
+
+   opacity: 1;
+   transition: opacity 180ms ease;
+}
+
+#site-stars canvas {
+   width: 100%;
+   height: 100%;
+   display: block;
+}
+
+/* Drawer abierto: baja protagonismo */
+:root[data-drawer-open="true"] #site-stars {
+   opacity: 0.28;
+}
+
+/* ===== Scroll container (SIEMPRE arriba del canvas) ===== */
 .scroll-container {
    height: 100vh;
    overflow-y: auto;
    position: relative;
    z-index: 2;
+
+   /* clave: si por alguna razón te quedó un fondo opaco aquí, mata el canvas */
+   background: transparent !important;
 }
 
 .section {
    scroll-snap-align: start;
+   position: relative;
+   z-index: 2;
 }
 
 #inicio {
@@ -38,9 +71,10 @@ body {
 }
 
 /* ===== Navbar ===== */
-
 .navbar-wrapper {
    pointer-events: none;
+   position: relative;
+   z-index: 3;
 }
 
 .navbar-pill {
@@ -92,7 +126,6 @@ body {
 }
 
 /* ===== Mobile drawer menu ===== */
-
 .mobile-menu-overlay {
    position: fixed;
    inset: 0;
@@ -171,7 +204,6 @@ body {
 }
 
 /* ===== Cards & effects ===== */
-
 .card {
    transition:
       transform 200ms ease,
@@ -195,6 +227,7 @@ body {
    transform-style: preserve-3d;
 }
 
+/* ===== Scroll indicator ===== */
 .scroll-indicator {
    position: absolute;
    left: 50%;
@@ -209,6 +242,7 @@ body {
    letter-spacing: 0.08em;
    text-transform: uppercase;
    animation: scroll-bounce 1.6s ease-in-out infinite;
+   z-index: 2;
 }
 
 .scroll-indicator::after {
@@ -221,6 +255,49 @@ body {
    opacity: 0;
    pointer-events: none;
    transition: opacity 150ms ease;
+}
+
+/* ===== Contact overlay ===== */
+.contact-overlay {
+   position: fixed;
+   inset: 0;
+   z-index: 1000;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.contact-backdrop {
+   position: absolute;
+   inset: 0;
+   background: rgba(0, 0, 0, 0.55);
+}
+
+.contact-phone {
+   position: relative;
+   z-index: 1;
+   width: min(92vw, 390px);
+   height: min(80vh, 680px);
+   border-radius: 38px;
+   border: 2px solid rgba(35, 53, 84, 0.9);
+   background: #112240;
+   box-shadow: 0 24px 60px rgba(2, 12, 27, 0.45);
+   padding: 2rem;
+   display: flex;
+   flex-direction: column;
+   gap: 1.5rem;
+   animation: phone-enter 200ms ease;
+}
+
+@keyframes phone-enter {
+   from {
+      opacity: 0;
+      transform: translateY(10px);
+   }
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
 }
 
 @keyframes scroll-bounce {
@@ -254,12 +331,11 @@ body {
 }
 
 /* ===== Side rails ===== */
-
 .side-rail {
    position: fixed;
    bottom: 0;
    width: 40px;
-   z-index: 2;
+   z-index: 3;
    display: flex;
    flex-direction: column;
    align-items: center;
@@ -308,6 +384,7 @@ body {
 :root[data-in-hero="true"] .side-rail,
 :root[data-in-footer="true"] .side-rail {
    opacity: 0;
+   pointer-events: none;
 }
 
 @media (max-width: 1024px) {
@@ -317,7 +394,6 @@ body {
 }
 
 /* ===== Footer ===== */
-
 .footer-accent {
    height: 1px;
    width: 100%;
@@ -338,31 +414,10 @@ body {
 }
 
 .drawer-links {
-   padding-top: 44px;
+   padding-top: 44px; /* deja espacio para la X */
 }
 
-/* ========== Global stars canvas (todo el sitio, se apaga en footer) ========== */
-
-#site-stars {
-   position: fixed;
-   inset: 0;
-   pointer-events: none;
-   z-index: 0;
-   overflow: hidden;
-   background: none;
-
-   opacity: 1;
-   transition: opacity 180ms ease;
-}
-
-#site-stars canvas {
-   width: 100%;
-   height: 100%;
-   display: block;
-}
-
-/* ========== Avatar frame: doble borde + aire (flotando) ========== */
-
+/* ===== Avatar frame ===== */
 .avatar-frame {
    position: relative;
    display: inline-block;
@@ -401,59 +456,25 @@ body {
    display: block;
    border-radius: inherit;
 }
-:root[data-drawer-open="true"] #site-stars {
-   opacity: 0.35;
+/* ===== SITE STARS: debe quedar DETRÁS del contenido ===== */
+#site-stars {
+   position: absolute; /* importante: ya no fixed */
+   inset: 0;
+   pointer-events: none;
+   z-index: 0 !important;
+   overflow: hidden;
 }
-/* Solo si ves estrellas por encima de contenido */
+
+#site-stars canvas {
+   width: 100%;
+   height: 100%;
+   display: block;
+}
+
+/* El contenedor scrolleable y las secciones por encima */
 #page-scroll,
 .scroll-container,
 .section {
-   position: relative;
-   z-index: 1;
-}
-#site-stars {
-   z-index: 0 !important;
-}
-#cris-avatar-wrap,
-#cris-avatar {
-   position: relative;
-   z-index: 5;
-}
-/* ===== HARD FIX: stars siempre debajo de TODO ===== */
-#site-stars {
-   position: fixed;
-   inset: 0;
-   z-index: 0 !important;
-   pointer-events: none;
-}
-
-/* El scroller y todo su contenido SIEMPRE arriba */
-#page-scroll {
    position: relative !important;
-   z-index: 10 !important;
-   isolation: isolate; /* fuerza stacking propio arriba del fondo */
-}
-
-/* Por si Reflex usa .scroll-container en vez de #page-scroll */
-.scroll-container {
-   position: relative !important;
-   z-index: 10 !important;
-   isolation: isolate;
-}
-
-/* Avatar por encima sí o sí */
-#cris-avatar-wrap,
-#cris-avatar {
-   position: relative;
-   z-index: 20 !important;
-}
-/* ===== Avatar: backing 100% opaco para bloquear estrellas ===== */
-#cris-avatar-wrap {
-   background: #112240; /* sólido */
-   border-radius: 80px;
-   overflow: hidden; /* recorta cualquier bleeding */
-}
-
-#cris-avatar {
-   background-color: #112240 !important; /* sólido */
+   z-index: 1 !important;
 }

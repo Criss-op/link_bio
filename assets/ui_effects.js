@@ -1,11 +1,3 @@
-/* ui_effects.js
-   1) Hero snap + datasets (inHero / inFooter)
-   2) Global stars (WORLD field): seeded across whole page, world-wrap, stream anchored to avatar, ping-pong, clipped at footer
-*/
-
-// =====================
-// 1) HERO SNAP + DATASETS
-// =====================
 (() => {
    const root = document.documentElement;
    const scrollContainer = document.getElementById("page-scroll");
@@ -44,7 +36,9 @@
       if (!profile || isSnapping) return;
       isSnapping = true;
       profile.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.setTimeout(() => (isSnapping = false), 700);
+      window.setTimeout(() => {
+         isSnapping = false;
+      }, 700);
    };
 
    const onWheel = (event) => {
@@ -63,7 +57,9 @@
    const onTouchEnd = (event) => {
       if (!inHero) return;
       const touchEndY = event.changedTouches[0].clientY;
-      if (touchStartY - touchEndY > 40) snapToProfile();
+      if (touchStartY - touchEndY > 40) {
+         snapToProfile();
+      }
    };
 
    scrollContainer.addEventListener("wheel", onWheel, { passive: false });
@@ -71,33 +67,37 @@
    scrollContainer.addEventListener("touchend", onTouchEnd, { passive: true });
 })();
 
-// =====================
-// 2) GLOBAL STARS (WORLD FIELD)
-// =====================
+// ===== Stars: world-based + ping-pong stream + no footer intrusion =====
 (() => {
-   const GLOBAL_KEY = "__LB_SITE_STARS__";
-
-   // Hot-reload: limpia instancia anterior si existe
-   if (window[GLOBAL_KEY] && typeof window[GLOBAL_KEY].cleanup === "function") {
-      window[GLOBAL_KEY].cleanup();
-   }
-
    const root = document.documentElement;
    const scrollerEl = document.getElementById("page-scroll");
-   const scrollTop = () => (scrollerEl ? scrollerEl.scrollTop : window.scrollY || 0);
+   if (!scrollerEl) return;
 
-   const reduceMotion =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   // Detecta drawer abierto (Reflex monta/desmonta el overlay)
+   const syncDrawerState = () => {
+      const open = !!document.querySelector(".mobile-menu-overlay");
+      root.dataset.drawerOpen = open ? "true" : "false";
+   };
+   syncDrawerState();
+   const drawerObs = new MutationObserver(syncDrawerState);
+   drawerObs.observe(document.body, { childList: true, subtree: true });
 
-   // Host fijo de fondo
    let host = document.getElementById("site-stars");
    if (!host) {
       host = document.createElement("div");
       host.id = "site-stars";
-      document.body.appendChild(host);
+
+      // Montar dentro del contenedor REAL del sitio, no en body
+      const scroller = document.getElementById("page-scroll");
+      const mountPoint = scroller ? scroller.parentElement : document.body;
+
+      mountPoint.appendChild(host);
    }
 
-   // Canvas
+   // anti-duplicado (hot reload)
+   if (host.dataset.starsInit === "true") return;
+   host.dataset.starsInit = "true";
+
    let canvas = host.querySelector("canvas");
    if (!canvas) {
       canvas = document.createElement("canvas");
@@ -108,46 +108,27 @@
    const ctx = canvas.getContext("2d", { alpha: true });
    if (!ctx) return;
 
-   // =====================
-   // STATE
-   // =====================
-   const S = {
-      raf: 0,
-      w: 1,
-      h: 1,
-      dpr: 1,
-      lastT: performance.now(),
-      stars: [],
-      originWorld: { x: 0, y: 0 },
-      footerCutWorld: Infinity,
-      lastMeasuredWorldH: 0,
-      bootTimer: 0,
-      bootTimeouts: [],
-      listeners: [],
-      drawerObserver: null,
-   };
+   const reduceMotion =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-   window[GLOBAL_KEY] = { cleanup };
-
-   // =====================
-   // TUNING (tu look)
-   // =====================
+   // tuning
    const STAR_DENSITY = 8.6;
    const MIN_STARS = 900;
    const MAX_STARS = 10300;
 
    const DENSE_RATIO = 0.95;
+   const SIGMA_SPAWN_MOBILE = 105;
+   const SIGMA_SPAWN_DESKTOP = 170;
 
-   const SLOPE_ABS = 0.45; // diagonal general
-   const WAVE_FREQ = 0.01;
+   let w = 1,
+      h = 1,
+      dpr = 1;
+   let stars = [];
+   let rafId = 0;
+   let lastT = performance.now();
 
-   const SIGMA_SPAWN_MOBILE = 120;
-   const SIGMA_SPAWN_DESKTOP = 435;
-
-   // =====================
-   // HELPERS
-   // =====================
    const rand = (a, b) => a + Math.random() * (b - a);
+   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
    const randn = () => {
       let u = 0,
@@ -157,14 +138,69 @@
       return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
    };
 
-   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+   const scrollTop = () => (scrollerEl ? scrollerEl.scrollTop : window.scrollY || 0);
 
-   // ping-pong 0..range
+   // footer cut in WORLD coords
+   let footerCutWorld = Infinity;
+
+   const updateFooterCutWorld = () => {
+      const footer = document.getElementById("footer");
+      if (!footer || !scrollerEl) {
+         footerCutWorld = scrollerEl
+            ? scrollerEl.scrollHeight
+            : document.documentElement.scrollHeight;
+         return;
+      }
+      const st = scrollTop();
+      const scRect = scrollerEl.getBoundingClientRect();
+      const fr = footer.getBoundingClientRect();
+      footerCutWorld = st + (fr.top - scRect.top);
+   };
+
+   const worldHeight = () =>
+      scrollerEl ? scrollerEl.scrollHeight : document.documentElement.scrollHeight;
+
+   let originWorld = { x: 0, y: 0 };
+
+   const updateOrigin = () => {
+      const avatar =
+         document.getElementById("cris-avatar-wrap") || document.getElementById("cris-avatar");
+      if (!avatar || !scrollerEl) {
+         originWorld = { x: w * 0.28, y: scrollTop() + h * 0.38 };
+         return;
+      }
+      const st = scrollTop();
+      const scRect = scrollerEl.getBoundingClientRect();
+      const ar = avatar.getBoundingClientRect();
+
+      originWorld = {
+         x: ar.left + ar.width * 0.52,
+         y: st + (ar.top - scRect.top) + ar.height * 0.46,
+      };
+   };
+
+   // triangular wave to bounce inside [0..range]
    const tri = (x, range) => {
-      if (range <= 0) return 0;
-      let m = x % (2 * range);
-      if (m < 0) m += 2 * range;
-      return m <= range ? m : 2 * range - m;
+      const p = 2 * range;
+      let t = x % p;
+      if (t < 0) t += p;
+      return t <= range ? t : p - t;
+   };
+
+   // stream center in WORLD-Y
+   const streamXAtY = (yWorld, t) => {
+      const slope = 0.45;
+      const base = originWorld.x + (yWorld - originWorld.y) * slope;
+
+      const amp = w < 700 ? 48 : 74;
+      const freq = 0.01;
+
+      const wave = Math.sin(yWorld * freq + t * 0.9) * amp;
+
+      const margin = 64;
+      const range = Math.max(1, w - 2 * margin);
+      const raw = base + wave - margin;
+      return margin + tri(raw, range);
    };
 
    const pickColor = () => {
@@ -174,84 +210,35 @@
       return [255, 255, 255];
    };
 
-   const worldHeight = () =>
-      scrollerEl ? scrollerEl.scrollHeight : document.documentElement.scrollHeight;
+   const resizeCanvas = () => {
+      const r = host.getBoundingClientRect();
+      w = Math.max(1, Math.floor(r.width));
+      h = Math.max(1, Math.floor(r.height));
+      dpr = window.devicePixelRatio || 1;
 
-   // ===== drawer state -> baja opacidad del fondo =====
-   const updateDrawerState = () => {
-      const open = !!document.querySelector(".mobile-menu-overlay");
-      root.dataset.drawerOpen = open ? "true" : "false";
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
    };
 
-   const updateFooterCutWorld = () => {
-      const footer = document.getElementById("footer");
-      if (!footer || !scrollerEl) {
-         S.footerCutWorld = worldHeight();
-         return;
-      }
-      const st = scrollTop();
-      const scRect = scrollerEl.getBoundingClientRect();
-      const fr = footer.getBoundingClientRect();
-      // top del footer en coords del scroller
-      S.footerCutWorld = st + (fr.top - scRect.top);
-   };
-
-   const computeOriginWorld = () => {
-      const st = scrollTop();
-      const avatar =
-         document.getElementById("cris-avatar-wrap") || document.getElementById("cris-avatar");
-      if (!avatar || !scrollerEl) {
-         return { x: S.w * 0.28, y: st + S.h * 0.38 };
-      }
-
-      const ar = avatar.getBoundingClientRect();
-      const scRect = scrollerEl.getBoundingClientRect();
-
-      const x = ar.left + ar.width * 0.52; // host ocupa viewport completo
-      const yInScroller = ar.top - scRect.top + ar.height * 0.46;
-
-      return { x, y: st + yInScroller };
-   };
-
-   const updateOrigin = () => {
-      S.originWorld = computeOriginWorld();
-   };
-
-   // corriente: diagonal + onda, con “rebote” (ping-pong) en márgenes
-   const streamXAtY = (yWorld, t) => {
-      const o = S.originWorld || { x: S.w * 0.28, y: scrollTop() + S.h * 0.38 };
-
-      const pad = S.w < 700 ? 22 : 48;
-      const range = Math.max(1, S.w - pad * 2);
-
-      const amp = S.w < 700 ? 48 : 74;
-      const wave = Math.sin(yWorld * WAVE_FREQ + t * 0.9) * amp;
-
-      const raw = o.x - pad + (yWorld - o.y) * SLOPE_ABS + wave;
-      return pad + tri(raw, range);
-   };
-
-   // =====================
-   // BUILD STARS (WORLD SEEDED)
-   // =====================
    const buildStars = () => {
-      S.stars = [];
+      stars = [];
       updateOrigin();
       updateFooterCutWorld();
 
-      const maxWorld = Math.max(1, Math.min(worldHeight(), S.footerCutWorld));
+      const maxWorld = Math.max(1, Math.min(worldHeight(), footerCutWorld));
+      const area = w * h;
 
-      const area = S.w * S.h;
-      const baseCount = Math.floor((area / 900) * STAR_DENSITY);
+      let baseCount = Math.floor((area / 900) * STAR_DENSITY);
+      baseCount = clamp(baseCount, MIN_STARS, MAX_STARS);
 
-      // sube cantidad según largo de página, pero cap con MAX_STARS
-      const factor = Math.max(1, maxWorld / S.h);
-      let count = Math.floor(baseCount * factor);
-      count = clamp(count, MIN_STARS, MAX_STARS);
+      // distribuimos por todo el WORLD (hasta el footer)
+      const sigmaSpawn = w < 700 ? SIGMA_SPAWN_MOBILE : SIGMA_SPAWN_DESKTOP;
 
-      const sigmaSpawn = S.w < 700 ? SIGMA_SPAWN_MOBILE : SIGMA_SPAWN_DESKTOP;
-
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < baseCount; i++) {
          const layer = Math.random() < 0.65 ? 0 : Math.random() < 0.85 ? 1 : 2;
 
          const radius =
@@ -262,22 +249,21 @@
 
          const sp = layer === 0 ? rand(10, 22) : layer === 1 ? rand(16, 30) : rand(22, 38);
 
-         // WORLD y: desde el primer frame por toda la página
-         const y = Math.random() * maxWorld;
-
+         const yWorld = Math.random() * maxWorld;
          let x;
+
          if (Math.random() < DENSE_RATIO) {
-            const cx = streamXAtY(y, 0);
+            const cx = streamXAtY(yWorld, 0);
             x = cx + randn() * sigmaSpawn;
          } else {
-            x = Math.random() * S.w;
+            x = Math.random() * w;
          }
 
-         x = ((x % S.w) + S.w) % S.w;
+         x = ((x % w) + w) % w;
 
-         S.stars.push({
+         stars.push({
             x,
-            y,
+            y: yWorld, // WORLD y
             r: radius,
             a: baseA,
             sp,
@@ -287,77 +273,73 @@
       }
    };
 
-   const resizeCanvas = () => {
-      const r = host.getBoundingClientRect();
-      S.w = Math.max(1, Math.floor(r.width));
-      S.h = Math.max(1, Math.floor(r.height));
-      S.dpr = window.devicePixelRatio || 1;
-
-      canvas.width = Math.floor(S.w * S.dpr);
-      canvas.height = Math.floor(S.h * S.dpr);
-      canvas.style.width = `${S.w}px`;
-      canvas.style.height = `${S.h}px`;
-
-      ctx.setTransform(S.dpr, 0, 0, S.dpr, 0, 0);
-
-      buildStars();
-   };
+   let lastMeasuredWorldH = 0;
 
    const maybeRebuildForHeightChange = () => {
       updateFooterCutWorld();
-      const wh = Math.max(1, Math.min(worldHeight(), S.footerCutWorld));
-      if (Math.abs(wh - S.lastMeasuredWorldH) > 120) {
-         S.lastMeasuredWorldH = wh;
-         resizeCanvas(); // rebuild incluida
-         updateOrigin();
+      const m = Math.max(1, Math.min(worldHeight(), footerCutWorld));
+      if (!lastMeasuredWorldH) {
+         lastMeasuredWorldH = m;
+         return;
+      }
+      const rel = Math.abs(m - lastMeasuredWorldH) / lastMeasuredWorldH;
+      if (rel > 0.12) {
+         lastMeasuredWorldH = m;
+         buildStars();
       }
    };
 
    const step = (now) => {
-      const dt = Math.min(0.04, (now - S.lastT) / 1000);
-      S.lastT = now;
+      const dt = Math.min(0.04, (now - lastT) / 1000);
+      lastT = now;
 
-      ctx.clearRect(0, 0, S.w, S.h);
+      const st = scrollTop();
 
-      const t = now / 1000;
       updateOrigin();
       updateFooterCutWorld();
 
-      const st = scrollTop();
-      const cutScreen = S.footerCutWorld - st; // borde superior del footer en pantalla
+      const cutScreen = footerCutWorld - st; // borde del footer en coords pantalla
 
-      const maxWorld = Math.max(1, Math.min(worldHeight(), S.footerCutWorld));
+      ctx.clearRect(0, 0, w, h);
 
-      const sigmaW = S.w < 700 ? 105 : 150;
-      const sigmaRespawn = S.w < 700 ? SIGMA_SPAWN_MOBILE : SIGMA_SPAWN_DESKTOP;
+      const t = now / 1000;
+      const sigmaW = w < 700 ? 105 : 150;
+      const sigmaRespawn = w < 700 ? SIGMA_SPAWN_MOBILE : SIGMA_SPAWN_DESKTOP;
 
-      for (let i = 0; i < S.stars.length; i++) {
-         const s = S.stars[i];
+      const maxWorld = Math.max(1, Math.min(worldHeight(), footerCutWorld));
 
-         // ===== Movimiento WORLD continuo (no respawn por viewport) =====
-         s.y += s.sp * dt;
-         if (s.y >= maxWorld) s.y -= maxWorld;
+      for (let i = 0; i < stars.length; i++) {
+         const s = stars[i];
 
-         // y en pantalla (mundo)
-         const yScreen = s.y - st;
-
-         // no dibujar si está fuera del viewport
-         if (yScreen < -80 || yScreen > S.h + 80) continue;
-
-         // clip footer (no invade)
-         if (yScreen >= cutScreen) continue;
-
-         // drift x + onda transversal
-         const waveMove = Math.sin(yScreen * 0.013 + t * 1.25 + s.phase) * (S.w < 700 ? 14 : 18);
+         // movimiento propio
+         const waveMove = Math.sin((s.y - st) * 0.013 + t * 1.25 + s.phase) * (w < 700 ? 14 : 18);
          s.x += s.sp * 0.55 * dt + waveMove * dt;
+         s.y += s.sp * dt;
+
+         // wrap world y (no depende del viewport -> no “cortes” al subir rápido)
+         if (s.y > maxWorld + 80) {
+            s.y = -rand(0, 120);
+            const cx = streamXAtY(s.y, t);
+            s.x = (((cx + randn() * sigmaRespawn) % w) + w) % w;
+            s.phase = Math.random() * Math.PI * 2;
+         }
 
          // wrap x
-         if (s.x > S.w + 40) s.x = -40;
-         if (s.x < -40) s.x = S.w + 40;
+         if (s.x > w + 40) s.x = -40;
+         if (s.x < -40) s.x = w + 40;
 
-         // concentración según cercanía a la corriente (WORLD y)
-         const cx = streamXAtY(s.y, t);
-         const d = Math.abs(s.x - cx);
+         const yScreen = s.y - st;
+
+         // fuera del viewport
+         if (yScreen < -80) continue;
+         if (yScreen > h + 80) continue;
+
+         // no invadir footer
+         if (yScreen >= cutScreen) continue;
+
+         // corriente y brillo
+         const cx2 = streamXAtY(s.y, t);
+         const d = Math.abs(s.x - cx2);
          const weight = Math.exp(-(d * d) / (2 * sigmaW * sigmaW));
 
          const tw = 0.86 + 0.14 * Math.sin(t * 2.0 + s.phase);
@@ -365,7 +347,6 @@
          const alpha = s.a * (0.22 + 0.95 * weight) * tw;
          const alphaBoost = Math.min(1, alpha * (1 + 2.2 * weight));
 
-         // tinte cian en corriente
          const ACCENT = [100, 255, 218];
          const tint = Math.min(1, 2.5 * weight);
          const bright = 1 + 0.6 * weight;
@@ -384,89 +365,56 @@
          ctx.fill();
       }
 
-      if (!reduceMotion) S.raf = requestAnimationFrame(step);
+      if (!reduceMotion) rafId = requestAnimationFrame(step);
    };
 
-   // =====================
-   // EVENTS
-   // =====================
-   const onResize = () => {
-      requestAnimationFrame(() => {
-         resizeCanvas();
-         updateOrigin();
+   const schedule = (() => {
+      let queued = false;
+      return () => {
+         if (queued) return;
+         queued = true;
+         requestAnimationFrame(() => {
+            queued = false;
+            resizeCanvas();
+            buildStars();
+         });
+      };
+   })();
+
+   window.addEventListener("resize", schedule, { passive: true });
+   scrollerEl.addEventListener(
+      "scroll",
+      () => {
+         // solo para mantener coherente origin/footer cut y detectar cambios de altura
          maybeRebuildForHeightChange();
-      });
-   };
+      },
+      { passive: true },
+   );
 
-   const onScroll = () => {
-      updateOrigin();
-      updateFooterCutWorld();
-      maybeRebuildForHeightChange();
-   };
-
-   window.addEventListener("resize", onResize, { passive: true });
-   S.listeners.push([window, "resize", onResize]);
-
-   (scrollerEl || window).addEventListener("scroll", onScroll, { passive: true });
-   S.listeners.push([scrollerEl || window, "scroll", onScroll]);
-
-   // Drawer observer (para atenuar)
-   updateDrawerState();
-   S.drawerObserver = new MutationObserver(updateDrawerState);
-   S.drawerObserver.observe(document.body, { childList: true, subtree: true });
-
-   // =====================
-   // INIT + BOOT CHECKS
-   // =====================
+   // init
    resizeCanvas();
    updateOrigin();
    updateFooterCutWorld();
+   buildStars();
 
-   requestAnimationFrame(() => {
-      resizeCanvas();
-      updateOrigin();
-      updateFooterCutWorld();
-   });
+   lastMeasuredWorldH = Math.max(1, Math.min(worldHeight(), footerCutWorld));
 
-   S.lastMeasuredWorldH = Math.max(1, Math.min(worldHeight(), S.footerCutWorld));
-
+   // algunos checks de arranque (montaje/scrollHeight)
    let checks = 0;
-   S.bootTimer = setInterval(() => {
+   const bootCheck = setInterval(() => {
       maybeRebuildForHeightChange();
       checks += 1;
-      if (checks >= 10) {
-         clearInterval(S.bootTimer);
-         S.bootTimer = 0;
-      }
+      if (checks >= 10) clearInterval(bootCheck);
    }, 600);
 
-   S.bootTimeouts.push(setTimeout(maybeRebuildForHeightChange, 250));
-   S.bootTimeouts.push(setTimeout(maybeRebuildForHeightChange, 1200));
+   setTimeout(maybeRebuildForHeightChange, 250);
+   setTimeout(maybeRebuildForHeightChange, 1200);
 
    if (!reduceMotion) {
-      S.raf = requestAnimationFrame(step);
+      rafId = requestAnimationFrame(step);
    } else {
-      step(performance.now());
-   }
-
-   function cleanup() {
-      try {
-         if (S.raf) cancelAnimationFrame(S.raf);
-      } catch (_) {}
-      try {
-         if (S.bootTimer) clearInterval(S.bootTimer);
-      } catch (_) {}
-      try {
-         for (const t of S.bootTimeouts) clearTimeout(t);
-      } catch (_) {}
-      try {
-         if (S.drawerObserver) S.drawerObserver.disconnect();
-      } catch (_) {}
-      for (const [target, evt, fn] of S.listeners) {
-         try {
-            target.removeEventListener(evt, fn);
-         } catch (_) {}
-      }
-      S.listeners = [];
+      lastT = performance.now();
+      step(lastT);
+      cancelAnimationFrame(rafId);
    }
 })();
