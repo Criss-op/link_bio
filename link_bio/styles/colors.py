@@ -12,7 +12,7 @@ class Color(Enum):
 
 class TextColor(Enum):
     HEADER = "#e6f1ff"
-    BODY = "#a8b2d1"
+    BODY = "#F5F8FFE6"
     PRIMARY = "#64ffda"
-    MUTED = "#8892b0"
+    MUTED = "#F5F8FF9E"
     FOOTER = "#8892b0"

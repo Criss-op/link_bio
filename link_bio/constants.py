@@ -1,6 +1,6 @@
 BRAND_NAME = "Cris"
 FULL_NAME = "Cristóbal Opazo"
-TAGLINE = "Process · Automation · Strategy · Management"
+TAGLINE = "Procesos · Automatización · Estrategia · Gestión"
 LINKEDIN_URL = "{LINKEDIN_URL}"
 GITHUB_URL = "{GITHUB_URL}"
 EMAIL_ADDRESS = "{EMAIL_ADDRESS}"

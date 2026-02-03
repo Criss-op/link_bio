@@ -478,3 +478,30 @@ body {
    position: relative !important;
    z-index: 1 !important;
 }
+.name-sparkle-wrap {
+   display: flex;
+   align-items: center;
+   line-height: 0;
+
+   /* ESTE es el espacio real que ocupa en el layout */
+   width: 70px; /* ajusta: 12px más pegado / 26px más separado */
+   flex: 0 0 18px;
+
+   overflow: visible; /* deja que el SVG se vea hacia afuera */
+}
+
+.name-sparkle-wrap.left {
+   justify-content: flex-end;
+} /* pegado al nombre */
+.name-sparkle-wrap.right {
+   justify-content: flex-start;
+} /* pegado al nombre */
+
+.name-sparkle-wrap svg {
+   display: block;
+   transform: translateY(4px); /* 0–2px si necesitas micro-ajuste vertical */
+}
+
+.hero-name {
+   margin: 0;
+}

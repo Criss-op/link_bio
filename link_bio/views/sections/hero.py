@@ -40,6 +40,67 @@ def hero_container(section_id: str, main: rx.Component, *overlays: rx.Component)
         width="100%",
     )
 
+SPARKLE_LEFT = rx.html("""
+<svg width="50" height="22" viewBox="20 0 40 24" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+  <path d="
+    M50 2
+    L54 10
+    L60 12
+    L54 14
+    L50 22
+    L46 14
+    L20 12
+    L46 10
+    Z"
+    fill="white" fill-opacity="0.92"
+  />
+  <path d="
+    M50 2
+    L54 10
+    L60 12
+    L54 14
+    L50 22
+    L46 14
+    L20 12
+    L46 10
+    Z"
+    stroke="rgba(62,231,255,0.60)"
+    stroke-width="1.2"
+    stroke-linejoin="round"
+  />
+</svg>
+""")
+
+SPARKLE_RIGHT = rx.html("""
+<svg width="50" height="22" viewBox="40 0 40 24" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+  <path d="
+    M50 2
+    L54 10
+    L80 12
+    L54 14
+    L50 22
+    L46 14
+    L40 12
+    L46 10
+    Z"
+    fill="white" fill-opacity="0.92"
+  />
+  <path d="
+    M50 2
+    L54 10
+    L80 12
+    L54 14
+    L50 22
+    L46 14
+    L40 12
+    L46 10
+    Z"
+    stroke="rgba(62,231,255,0.60)"
+    stroke-width="1.2"
+    stroke-linejoin="round"
+  />
+</svg>
+""")
 
 def hero_section() -> rx.Component:
     show_cv = CV_URL and "{" not in CV_URL
@@ -60,8 +121,8 @@ def hero_section() -> rx.Component:
                     rx.image(
                         src="avatar_cris_vector_white.png",
                         alt=FULL_NAME,
-                        width=rx.breakpoints(initial="225px", md="275px", lg="294px"),
-                        height=rx.breakpoints(initial="250px", md="300px", lg="325px"),
+                        width=rx.breakpoints(initial="225px", md="240px", lg="248px"),
+                        height=rx.breakpoints(initial="336px", md="358px", lg="370px"),
                         object_fit="contain",
                         id="cris-avatar",
                         class_name="avatar-img",
@@ -78,66 +139,72 @@ def hero_section() -> rx.Component:
             flex_shrink="0",
         ),
         rx.vstack(
-            rx.text(
-                "Hola, mi nombre es",
-                font_size=rx.breakpoints(initial="0.95rem", md="1.05rem"),
-                color=text_color.PRIMARY.value,
-                font_weight="500",
+            # 1) BLOQUE CENTRADO (manda el TAGLINE)
+            rx.vstack(
+                rx.text(
+                    "Hola, mi nombre es:",
+                    font_size=rx.breakpoints(initial="0.95rem", md="1.05rem"),
+                    color=text_color.PRIMARY.value,
+                    font_weight="500",
+                    text_align="center",
+                ),
+                rx.hstack(
+                    rx.box(SPARKLE_LEFT, class_name="name-sparkle-wrap left"),
+                    rx.heading(
+                        "Cristóbal Opazo",
+                        font_size=rx.breakpoints(initial="2.2rem", md="3rem", lg="3.4rem"),
+                        line_height="1.05",
+                        margin="0",
+                        class_name="hero-name",
+                    ),
+                    rx.box(SPARKLE_RIGHT, class_name="name-sparkle-wrap right"),
+                    align="center",
+                    spacing="0",
+                ),
+                # TAGLINE como "heading" y mismo tamaño que el nombre
+                rx.heading(
+                    TAGLINE,
+                    font_size=rx.breakpoints(initial="1.1rem", md="1.5rem", lg="1.7rem"),
+                    line_height="1.05",
+                    color=color.PRIMARY.value,
+                    font_weight="700",
+                    text_align="center",
+                ),
+                spacing="2",
+                align_items="center",
+                width="fit-content",
+                max_width="100%",
+                margin_x="auto",
             ),
-            rx.heading(
-                "Cristóbal Opazo.",
-                font_size=rx.breakpoints(initial="2.2rem", md="3rem", lg="3.4rem"),
-                line_height="1.05",
-            ),
-            rx.text(
-                TAGLINE,
-                font_size=rx.breakpoints(initial="1rem", md="1.15rem"),
-                color=color.PRIMARY.value,
-                font_weight="600",
-            ),
+
+            # 2) LINKS START (pegados a la izquierda)
             rx.hstack(
                 *social_links,
                 spacing="4",
                 flex_wrap="wrap",
+                width="100%",
+                justify="start",
             ),
+
+            # PÁRRAFO (igual que antes)
             rx.text(
-                """Hola, soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos. 
-Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan. 
-Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos 
-y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
+                """Soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos. 
+        Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan. 
+        Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos 
+        y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
                 color=text_color.BODY.value,
                 font_size=rx.breakpoints(initial="1rem", md="1.05rem", lg="1.1rem"),
                 line_height="1.7",
+                max_width="800px",
             ),
-            rx.hstack(
-                rx.link(
-                    rx.button(
-                        "Ver Perfil",
-                        background_color=color.PRIMARY.value,
-                        color="#0a192f",
-                        padding_x="1.5rem",
-                        padding_y="0.75rem",
-                    ),
-                    href="#perfil",
-                ),
-                rx.link(
-                    rx.button(
-                        "Ver Experiencia",
-                        variant="outline",
-                        border=f"1px solid {color.BORDER.value}",
-                        color=text_color.HEADER.value,
-                        padding_x="1.5rem",
-                        padding_y="0.75rem",
-                    ),
-                    href="#experiencia",
-                ),
-                spacing="3",
-                flex_wrap="wrap",
-            ),
+
             spacing="4",
             align_items="start",
             max_width="800px",
+            width="100%",
         ),
+
+
         direction=rx.breakpoints(initial="column", md="row"),
         spacing="6",
         align="center",

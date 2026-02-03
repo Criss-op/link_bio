@@ -1,0 +1,183 @@
+:root {
+   --accent-primary: rgba(64, 255, 214, 1);
+
+   --ax: 60%;
+   --ay: 25%;
+   --glow-o: 1;
+   --glow-gain: 1;
+
+   --inner-gap: 0px; /* separación del ring interior (0–3px) */
+   --inner-ring: 1px; /* grosor ring interior (1–3px) */
+}
+
+.avatar-frame {
+   position: relative;
+   display: inline-block;
+   border: none;
+   border-radius: 80px;
+
+   background:
+      radial-gradient(520px 380px at 40% 30%, rgba(62, 231, 255, 0.08) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(17, 34, 64, 0.52) 0%, rgba(2, 12, 27, 0.22) 100%);
+
+   box-shadow: 0 20px 80px rgba(2, 12, 27, 0.65);
+}
+
+/* OUTER RING (gradient) */
+.avatar-frame::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   padding: 4px;
+   pointer-events: none;
+   z-index: 0;
+
+   background: linear-gradient(
+      160deg,
+      rgba(0, 110, 155, 1) 0%,
+      rgba(0, 190, 220, 0.85) 38%,
+      var(--accent-primary) 100%
+   );
+
+   -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+   -webkit-mask-composite: xor;
+   mask-composite: exclude;
+}
+
+/* OUTER RING (reflection) */
+.avatar-frame::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   padding: 4px;
+   pointer-events: none;
+   z-index: 0;
+
+   background:
+      radial-gradient(
+         220px 160px at var(--ax, 60%) var(--ay, 25%),
+         rgba(255, 255, 255, 1) 0%,
+         rgba(255, 255, 255, 0.78) 18%,
+         rgba(255, 255, 255, 0.38) 34%,
+         rgba(62, 231, 255, 0.2) 48%,
+         transparent 62%
+      ),
+      radial-gradient(
+         520px 420px at var(--ax, 60%) var(--ay, 25%),
+         rgba(255, 255, 255, 0.18) 0%,
+         rgba(62, 231, 255, 0.1) 35%,
+         transparent 70%
+      );
+
+   -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+   -webkit-mask-composite: xor;
+   mask-composite: exclude;
+
+   opacity: calc(var(--glow-o, 1) * var(--glow-gain, 1));
+   transition: opacity 140ms ease;
+   mix-blend-mode: plus-lighter;
+
+   filter: blur(1.2px) saturate(1.6) brightness(1.25)
+      drop-shadow(0 0 18px rgba(255, 255, 255, 0.35)) drop-shadow(0 0 28px rgba(62, 231, 255, 0.18));
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .avatar-frame::after {
+      display: none;
+   }
+   .avatar-inner::after {
+      display: none;
+   }
+}
+
+/* INNER WRAP */
+.avatar-inner {
+   position: relative;
+   z-index: 1;
+   border-radius: 80px;
+   overflow: hidden;
+
+   padding: var(--inner-gap);
+   box-sizing: border-box;
+}
+
+/* INNER RING (gradient) */
+.avatar-inner::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   padding: var(--inner-ring);
+   pointer-events: none;
+   z-index: 2;
+
+   background: linear-gradient(
+      160deg,
+      rgba(0, 110, 155, 1) 0%,
+      rgba(0, 190, 220, 0.85) 38%,
+      var(--accent-primary) 100%
+   );
+
+   -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+   -webkit-mask-composite: xor;
+   mask-composite: exclude;
+
+   opacity: 0.45; /* un poco más visible que antes */
+   filter: blur(0.1px);
+}
+
+/* INNER RING (reflection) */
+.avatar-inner::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   padding: var(--inner-ring);
+   pointer-events: none;
+   z-index: 3;
+
+   /* mismo reflejo, pero algo más contenido */
+   background:
+      radial-gradient(
+         180px 130px at var(--ax, 60%) var(--ay, 25%),
+         rgba(255, 255, 255, 0.95) 0%,
+         rgba(255, 255, 255, 0.55) 18%,
+         rgba(255, 255, 255, 0.22) 32%,
+         rgba(62, 231, 255, 0.16) 46%,
+         transparent 62%
+      ),
+      radial-gradient(
+         420px 360px at var(--ax, 60%) var(--ay, 25%),
+         rgba(255, 255, 255, 0.14) 0%,
+         rgba(62, 231, 255, 0.08) 35%,
+         transparent 72%
+      );
+
+   -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+   -webkit-mask-composite: xor;
+   mask-composite: exclude;
+
+   opacity: calc(var(--glow-o, 1) * var(--glow-gain, 1));
+   transition: opacity 140ms ease;
+   mix-blend-mode: plus-lighter;
+
+   filter: blur(1px) saturate(1.5) brightness(1.18) drop-shadow(0 0 14px rgba(255, 255, 255, 0.22))
+      drop-shadow(0 0 22px rgba(62, 231, 255, 0.14));
+}
+
+/* IMAGE */
+.avatar-img {
+   position: relative;
+   z-index: 1;
+   display: block;
+}

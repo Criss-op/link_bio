@@ -1,0 +1,40 @@
+.social-chip {
+   display: inline-flex;
+   align-items: center;
+   gap: 0.5rem;
+
+   padding: 0.45rem 0.7rem;
+   border-radius: 999px;
+
+   border: 1px solid rgba(62, 231, 255, 0.22);
+   background: rgba(255, 255, 255, 0.03);
+
+   text-decoration: none;
+   color: inherit;
+
+   transition:
+      transform 140ms ease,
+      border-color 140ms ease,
+      background 140ms ease,
+      box-shadow 140ms ease;
+}
+
+.social-chip:hover {
+   transform: translateY(-1px);
+   border-color: rgba(62, 231, 255, 0.48);
+   background: rgba(255, 255, 255, 0.05);
+   box-shadow:
+      0 0 0 1px rgba(62, 231, 255, 0.1),
+      0 12px 28px rgba(2, 12, 27, 0.35);
+}
+
+.social-chip:focus-visible {
+   outline: none;
+   box-shadow:
+      0 0 0 3px rgba(62, 231, 255, 0.22),
+      0 0 0 1px rgba(62, 231, 255, 0.35) inset;
+}
+
+.social-chip svg {
+   opacity: 0.9;
+}
