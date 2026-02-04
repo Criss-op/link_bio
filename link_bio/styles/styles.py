@@ -15,6 +15,7 @@ STYLESHEETS = [
     "/ui_effects.css",
     "/avatar_glow.css",
     "/hero_links.css",
+    "/skills_carousel.css",
 ]
 
 

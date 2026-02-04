@@ -40,6 +40,7 @@ def hero_container(section_id: str, main: rx.Component, *overlays: rx.Component)
         width="100%",
     )
 
+
 SPARKLE_LEFT = rx.html("""
 <svg width="50" height="22" viewBox="20 0 40 24" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
   <path d="
@@ -102,6 +103,7 @@ SPARKLE_RIGHT = rx.html("""
 </svg>
 """)
 
+
 def hero_section() -> rx.Component:
     show_cv = CV_URL and "{" not in CV_URL
     social_links = [
@@ -138,6 +140,7 @@ def hero_section() -> rx.Component:
             class_name="avatar-wrap",
             flex_shrink="0",
         ),
+
         rx.vstack(
             # 1) BLOQUE CENTRADO (manda el TAGLINE)
             rx.vstack(
@@ -161,7 +164,6 @@ def hero_section() -> rx.Component:
                     align="center",
                     spacing="0",
                 ),
-                # TAGLINE como "heading" y mismo tamaño que el nombre
                 rx.heading(
                     TAGLINE,
                     font_size=rx.breakpoints(initial="1.1rem", md="1.5rem", lg="1.7rem"),
@@ -186,16 +188,71 @@ def hero_section() -> rx.Component:
                 justify="start",
             ),
 
-            # PÁRRAFO (igual que antes)
+            # PÁRRAFO
             rx.text(
-                """Soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos. 
-        Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan. 
-        Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos 
-        y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
+                """Soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos.
+Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan.
+Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos
+y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
                 color=text_color.BODY.value,
                 font_size=rx.breakpoints(initial="1rem", md="1.05rem", lg="1.1rem"),
                 line_height="1.7",
                 max_width="800px",
+                width="100%",
+            ),
+
+            # CARRUSEL PLANO (limitado a 800px y recortado para que no se desborde)
+            rx.box(
+                rx.box(
+                    rx.box(
+                        rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
+                        rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
+                        rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
+                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
+                        rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),
+                        rx.image(src="/icons_skills/mercadopublico.png", class_name="skills-icon", alt="Mercado Público"),
+                        rx.image(src="/icons_skills/scrum.png", class_name="skills-icon", alt="Scrum"),
+                        rx.image(src="/icons_skills/php.png", class_name="skills-icon", alt="PHP"),
+                        rx.image(src="/icons_skills/python.png", class_name="skills-icon", alt="Python"),
+                        rx.image(src="/icons_skills/js.png", class_name="skills-icon", alt="JavaScript"),
+                        rx.image(src="/icons_skills/css3.png", class_name="skills-icon", alt="CSS3"),
+                        rx.image(src="/icons_skills/sass.png", class_name="skills-icon", alt="Sass"),
+                        rx.image(src="/icons_skills/json.png", class_name="skills-icon", alt="JSON"),
+                        rx.image(src="/icons_skills/html5.png", class_name="skills-icon", alt="HTML5"),
+                        rx.image(src="/icons_skills/github.png", class_name="skills-icon", alt="GitHub"),
+                        rx.image(src="/icons_skills/mysql.png", class_name="skills-icon", alt="MySQL"),
+                        rx.image(src="/icons_skills/postgres.png", class_name="skills-icon", alt="PostgreSQL"),
+                        rx.image(src="/icons_skills/vscode.png", class_name="skills-icon", alt="VS Code"),
+                        class_name="skills-set",
+                    ),
+                    rx.box(
+                        rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
+                        rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
+                        rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
+                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
+                        rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),
+                        rx.image(src="/icons_skills/mercadopublico.png", class_name="skills-icon", alt="Mercado Público"),
+                        rx.image(src="/icons_skills/scrum.png", class_name="skills-icon", alt="Scrum"),
+                        rx.image(src="/icons_skills/php.png", class_name="skills-icon", alt="PHP"),
+                        rx.image(src="/icons_skills/python.png", class_name="skills-icon", alt="Python"),
+                        rx.image(src="/icons_skills/js.png", class_name="skills-icon", alt="JavaScript"),
+                        rx.image(src="/icons_skills/css3.png", class_name="skills-icon", alt="CSS3"),
+                        rx.image(src="/icons_skills/sass.png", class_name="skills-icon", alt="Sass"),
+                        rx.image(src="/icons_skills/json.png", class_name="skills-icon", alt="JSON"),
+                        rx.image(src="/icons_skills/html5.png", class_name="skills-icon", alt="HTML5"),
+                        rx.image(src="/icons_skills/github.png", class_name="skills-icon", alt="GitHub"),
+                        rx.image(src="/icons_skills/mysql.png", class_name="skills-icon", alt="MySQL"),
+                        rx.image(src="/icons_skills/postgres.png", class_name="skills-icon", alt="PostgreSQL"),
+                        rx.image(src="/icons_skills/vscode.png", class_name="skills-icon", alt="VS Code"),
+                        class_name="skills-set",
+                        aria_hidden=True,
+                    ),
+                    class_name="skills-track",
+                ),
+                class_name="skills-slider",
+                width="100%",
+                max_width="800px",
+                overflow="hidden",
             ),
 
             spacing="4",
@@ -204,7 +261,6 @@ def hero_section() -> rx.Component:
             width="100%",
         ),
 
-
         direction=rx.breakpoints(initial="column", md="row"),
         spacing="6",
         align="center",
@@ -212,7 +268,7 @@ def hero_section() -> rx.Component:
         width="100%",
         class_name="hero-layout",
         position="relative",
-        z_index="1",  # siempre arriba del polvo
+        z_index="1",
     )
 
     scroll_indicator = rx.box(

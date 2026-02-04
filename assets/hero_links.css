@@ -16,7 +16,8 @@
       transform 140ms ease,
       border-color 140ms ease,
       background 140ms ease,
-      box-shadow 140ms ease;
+      box-shadow 140ms ease,
+      color 140ms ease;
 }
 
 .social-chip:hover {
@@ -26,6 +27,17 @@
    box-shadow:
       0 0 0 1px rgba(62, 231, 255, 0.1),
       0 12px 28px rgba(2, 12, 27, 0.35);
+
+   /* FIX: que no se ponga azul */
+   color: #64ffda !important;
+}
+
+.social-chip:visited {
+   color: inherit !important;
+}
+
+.social-chip:visited:hover {
+   color: #64ffda !important;
 }
 
 .social-chip:focus-visible {

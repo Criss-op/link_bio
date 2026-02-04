@@ -3,6 +3,8 @@ from link_bio.state import UIState
 from link_bio.styles.colors import Color as color
 from link_bio.styles.colors import TextColor as text_color
 from link_bio.styles.styles import MAX_WIDTH
+from link_bio.constants import EMAIL_ADDRESS
+
 
 
 NAV_ITEMS = [
@@ -13,7 +15,9 @@ NAV_ITEMS = [
     ("Habilidades", "#habilidades"),
     ("Metodologías", "#metodologias"),
     ("Objetivos", "#objetivos"),
+    ("Contacto", "#contacto"),
 ]
+
 
 
 def nav_link(label: str, href: str) -> rx.Component:
@@ -44,16 +48,7 @@ def navbar() -> rx.Component:
     # ---------------- Desktop (lg+) ----------------
     desktop_links = rx.hstack(
         *[nav_link(label, href) for label, href in NAV_ITEMS],
-        rx.button(
-            "Contacto",
-            class_name="navbar-link",
-            color=text_color.BODY.value,
-            font_weight="500",
-            variant="ghost",
-            _hover={"color": color.PRIMARY.value},
-            on_click=UIState.open_contact,
-            style={"marginLeft": "0.35rem"},
-        ),
+        
         rx.link(
             "Proyectos 🔒",
             href="/projects",
@@ -132,14 +127,14 @@ def navbar() -> rx.Component:
                 ),
                  rx.vstack(
                     *[drawer_link(label, href) for label, href in NAV_ITEMS],
-                    rx.button(
+                    rx.link(
                         "Contacto",
+                        href=f"mailto:{EMAIL_ADDRESS}",
                         class_name="mobile-menu-link",
                         color=text_color.HEADER.value,
                         font_weight="600",
-                        variant="ghost",
                         _hover={"color": color.PRIMARY.value},
-                        on_click=UIState.open_contact_from_menu,
+                        on_click=UIState.close_menu,
                         width="100%",
                     ),
                      rx.link(

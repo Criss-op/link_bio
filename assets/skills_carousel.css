@@ -1,0 +1,107 @@
+/* ===========================
+   Skills Carousel (Flat Marquee)
+   - No visible container (transparent)
+   - Icons fade at edges (mask-image)
+   - Infinite loop (requires 2 identical sets in markup)
+   - Hover: only hovered icon becomes normal
+   =========================== */
+
+@keyframes skillsMarquee {
+   /* moves to the right */
+   0% {
+      transform: translateX(-50%);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+
+.skills-slider {
+   width: 100%;
+   height: clamp(84px, 10vw, 110px);
+   position: relative;
+
+   /* No container visuals */
+   background: transparent;
+   box-shadow: none;
+   border-radius: 0;
+
+   /* Keep animation clipped to this width */
+   overflow: hidden;
+
+   /* Fade ONLY the icons at start/end (no overlay bands) */
+   --fade: clamp(28px, 6vw, 90px);
+   -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 var(--fade),
+      #000 calc(100% - var(--fade)),
+      transparent 100%
+   );
+   mask-image: linear-gradient(
+      90deg,
+      transparent 0,
+      #000 var(--fade),
+      #000 calc(100% - var(--fade)),
+      transparent 100%
+   );
+   -webkit-mask-repeat: no-repeat;
+   mask-repeat: no-repeat;
+   -webkit-mask-size: 100% 100%;
+   mask-size: 100% 100%;
+}
+
+.skills-track {
+   height: 100%;
+   display: flex;
+   align-items: center;
+   width: max-content;
+
+   /* Space between icons */
+   gap: clamp(22px, 3.2vw, 44px);
+   padding: 0 clamp(18px, 2.4vw, 32px);
+
+   /* Speed control here */
+   animation: skillsMarquee 40s linear infinite;
+   will-change: transform;
+}
+
+.skills-set {
+   display: flex;
+   align-items: center;
+   gap: inherit; /* same gap as track */
+}
+
+/* Icons: default dimmed; hover restores only that icon */
+.skills-icon {
+   height: clamp(25px, 2.9vw, 45px);
+
+   width: auto;
+
+   opacity: 0.55;
+   filter: grayscale(1) brightness(0.75) saturate(0.6);
+
+   transition:
+      filter 160ms ease,
+      opacity 160ms ease,
+      transform 160ms ease;
+   user-select: none;
+   pointer-events: auto;
+}
+
+.skills-icon:hover {
+   opacity: 1;
+   filter: none;
+   transform: translateY(-1px);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+   .skills-track {
+      animation: none;
+   }
+}
+/* Pausar el marquee cuando el cursor está encima del carrusel */
+.skills-slider:hover .skills-track {
+   animation-play-state: paused;
+}

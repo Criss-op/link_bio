@@ -103,13 +103,47 @@ body {
    box-shadow: none;
    backdrop-filter: none;
 }
-
 .navbar-link {
    background: transparent;
    border: none;
    padding: 0;
    font-size: 0.95rem;
    cursor: pointer;
+
+   position: relative;
+   display: inline-flex;
+   align-items: center;
+
+   /* Reserva espacio para la barra arriba */
+   padding-top: 10px;
+}
+
+.navbar-link::before {
+   content: "";
+   position: absolute;
+   top: 0; /* dentro del link */
+   left: 50%;
+   width: 62%;
+   height: 3px;
+   border-radius: 999px;
+   background: #64ffda;
+
+   opacity: 0;
+   transform: translateX(-50%) scaleX(0);
+   transform-origin: center;
+   transition:
+      opacity 150ms ease,
+      transform 150ms ease;
+}
+
+.navbar-link.is-active::before {
+   opacity: 1;
+   transform: translateX(-50%) scaleX(1);
+}
+
+/* por si algún contenedor recorta */
+.navbar-pill {
+   overflow: visible;
 }
 
 @media (max-width: 1024px) {
@@ -243,6 +277,13 @@ body {
    text-transform: uppercase;
    animation: scroll-bounce 1.6s ease-in-out infinite;
    z-index: 2;
+   transition: opacity 150ms ease;
+}
+/* En breakpoint "initial" (mobile / pantallas pequeñas): nunca mostrar el scroll */
+@media (max-width: 767px) {
+   .scroll-indicator {
+      display: none !important;
+   }
 }
 
 .scroll-indicator::after {
@@ -251,10 +292,18 @@ body {
    color: #a8b2d1;
 }
 
+/* Fuera del hero: se apaga (y se corta la animación para que no “reviva” opacity) */
 :root[data-in-hero="false"] .scroll-indicator {
-   opacity: 0;
-   pointer-events: none;
-   transition: opacity 150ms ease;
+   opacity: 0 !important;
+   pointer-events: none !important;
+   visibility: hidden !important;
+   animation: none !important;
+}
+:root:not([data-in-hero="true"]) .scroll-indicator {
+   opacity: 0 !important;
+   pointer-events: none !important;
+   visibility: hidden !important;
+   animation: none !important;
 }
 
 /* ===== Contact overlay ===== */

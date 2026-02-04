@@ -40,7 +40,8 @@ def index() -> rx.Component:
         rx.script(src="/cursor_spotlight.js"),
         rx.script(src="/avatar_tilt.js"),
         rx.script(src="/ui_effects.js"),
-        rx.script(src="/avatar_glow.js")
+        rx.script(src="/avatar_glow.js"),
+        rx.script(src="/navbar_active.js"),
 
     )
 

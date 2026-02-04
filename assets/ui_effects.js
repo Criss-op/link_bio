@@ -13,14 +13,21 @@
 
    const HERO_TOP_PX = 120;
 
+   const getScrollTop = () => {
+      const a = scrollContainer ? scrollContainer.scrollTop : 0;
+      const b = window.scrollY || 0;
+      return Math.max(a, b); // usa el scroller que realmente se está moviendo
+   };
+
    const updateHeroTopState = () => {
-      const atTop = scrollContainer.scrollTop <= HERO_TOP_PX;
+      const atTop = getScrollTop() <= HERO_TOP_PX;
       inHero = atTop;
       root.dataset.inHero = atTop ? "true" : "false";
    };
 
    updateHeroTopState();
    scrollContainer.addEventListener("scroll", updateHeroTopState, { passive: true });
+   window.addEventListener("scroll", updateHeroTopState, { passive: true });
 
    if (footer) {
       const footerObserver = new IntersectionObserver(
@@ -256,8 +263,7 @@
          let radius =
             layer === 0 ? rand(0.35, 0.85) : layer === 1 ? rand(0.45, 1.05) : rand(0.55, 1.2);
 
-         // CAMBIO: solo en layer 2, 15% aumenta 30% sobre su tamaño actual
-         if (layer === 2 && Math.random() < 0.05) {
+         if (layer === 2 && Math.random() < 0.15) {
             radius *= 1.8;
          }
 
