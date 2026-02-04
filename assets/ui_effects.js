@@ -112,9 +112,11 @@
       window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
    // tuning
-   const STAR_DENSITY = 8.6;
-   const MIN_STARS = 900;
-   const MAX_STARS = 10300;
+   const STAR_DENSITY = 23;
+   const MIN_STARS = 2100;
+   const MAX_STARS = 26600;
+   const FAR_STARS_MAX = 20;
+   const FAR_STAR_RADIUS = 6;
 
    const DENSE_RATIO = 0.95;
    const SIGMA_SPAWN_MOBILE = 105;
@@ -203,11 +205,20 @@
       return margin + tri(raw, range);
    };
 
+   // CAMBIO: 17% blancas del TOTAL. El 83% restante conserva la proporción original acento/hielo.
+   // Original: 78% acento, 19% hielo, 3% blanco.
+   // Nuevo: 66.742268% acento, 16.257732% hielo, 17% blanco.
    const pickColor = () => {
       const r = Math.random();
-      if (r < 0.78) return [100, 255, 218];
-      if (r < 0.97) return [191, 253, 243];
+      if (r < 0.6674226804123711) return [100, 255, 218];
+      if (r < 0.83) return [191, 253, 243];
       return [255, 255, 255];
+   };
+
+   const pickFarColor = () => {
+      const r = Math.random();
+      if (r < 0.9) return [255, 255, 255]; // casi siempre blanco
+      return [191, 253, 243]; // a veces hielo suave
    };
 
    const resizeCanvas = () => {
@@ -241,8 +252,14 @@
       for (let i = 0; i < baseCount; i++) {
          const layer = Math.random() < 0.65 ? 0 : Math.random() < 0.85 ? 1 : 2;
 
-         const radius =
+         // Tamaños originales por layer
+         let radius =
             layer === 0 ? rand(0.35, 0.85) : layer === 1 ? rand(0.45, 1.05) : rand(0.55, 1.2);
+
+         // CAMBIO: solo en layer 2, 15% aumenta 30% sobre su tamaño actual
+         if (layer === 2 && Math.random() < 0.05) {
+            radius *= 1.8;
+         }
 
          const baseA =
             layer === 0 ? rand(0.1, 0.26) : layer === 1 ? rand(0.12, 0.3) : rand(0.16, 0.42);

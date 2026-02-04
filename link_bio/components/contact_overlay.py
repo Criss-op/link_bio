@@ -34,7 +34,7 @@ def contact_overlay() -> rx.Component:
                         rx.button(
                             "Email",
                             background_color=color.PRIMARY.value,
-                            color="#0a192f",
+                            color= color.BACKGROUND.value,
                             padding_x="1.5rem",
                             padding_y="0.75rem",
                         ),
