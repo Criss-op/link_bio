@@ -651,3 +651,37 @@ body {
       overflow-x: hidden;
    }
 }
+/* ===== Scrollbar (solo para el contenedor real de scroll) ===== */
+#page-scroll {
+   /* Firefox */
+   scrollbar-width: 14px;
+   scrollbar-color: rgba(100, 255, 218, 0.35) rgba(10, 10, 10, 0.55);
+
+   /* Evita saltos cuando aparece/desaparece la scrollbar (Chrome/Edge modernos) */
+   scrollbar-gutter: stable;
+}
+
+/* Chrome / Edge / Safari */
+#page-scroll::-webkit-scrollbar {
+   width: 14px;
+}
+
+#page-scroll::-webkit-scrollbar-track {
+   background: rgba(10, 10, 10, 0.55);
+   border-left: 1px solid rgba(100, 255, 218, 0.08);
+}
+
+#page-scroll::-webkit-scrollbar-thumb {
+   background: rgba(16, 16, 16, 0.72);
+   border: 1px solid rgba(100, 255, 218, 0.22);
+   border-radius: 999px;
+}
+
+#page-scroll::-webkit-scrollbar-thumb:hover {
+   background: rgba(16, 16, 16, 0.86);
+   border-color: rgba(100, 255, 218, 0.35);
+}
+
+#page-scroll::-webkit-scrollbar-corner {
+   background: transparent;
+}
