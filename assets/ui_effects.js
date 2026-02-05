@@ -80,14 +80,36 @@
    const scrollerEl = document.getElementById("page-scroll");
    if (!scrollerEl) return;
 
-   // Detecta drawer abierto (Reflex monta/desmonta el overlay)
+   // Detecta drawer abierto (overlay siempre montado; usamos clase is-open)
    const syncDrawerState = () => {
-      const open = !!document.querySelector(".mobile-menu-overlay");
+      const overlay = document.querySelector(".mobile-menu-overlay");
+      if (!overlay) {
+         root.dataset.drawerOpen = "false";
+         return;
+      }
+
+      const cs = window.getComputedStyle(overlay);
+      const open =
+         overlay.classList.contains("is-open") &&
+         cs.display !== "none" &&
+         cs.visibility !== "hidden";
+
       root.dataset.drawerOpen = open ? "true" : "false";
    };
+
    syncDrawerState();
-   const drawerObs = new MutationObserver(syncDrawerState);
-   drawerObs.observe(document.body, { childList: true, subtree: true });
+
+   // Observa cambios de clase del overlay (no childList)
+   const attachOverlayObserver = () => {
+      const overlay = document.querySelector(".mobile-menu-overlay");
+      if (!overlay) return;
+
+      const obs = new MutationObserver(syncDrawerState);
+      obs.observe(overlay, { attributes: true, attributeFilter: ["class", "style"] });
+   };
+
+   attachOverlayObserver();
+   window.addEventListener("resize", syncDrawerState, { passive: true });
 
    let host = document.getElementById("site-stars");
    if (!host) {

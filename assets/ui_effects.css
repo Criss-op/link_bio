@@ -75,7 +75,7 @@ body {
 .navbar-wrapper {
    pointer-events: none;
    position: relative;
-   z-index: 3;
+   z-index: 1101;
 }
 
 .navbar-pill {
@@ -90,6 +90,13 @@ body {
       border-color 200ms ease,
       box-shadow 200ms ease;
    backdrop-filter: blur(10px);
+}
+/* Cuando el drawer está abierto: el pill no debe verse (evita “círculo” detrás de la X) */
+:root[data-drawer-open="true"] .navbar-pill {
+   background: transparent !important;
+   border-color: transparent !important;
+   box-shadow: none !important;
+   backdrop-filter: none !important;
 }
 
 :root[data-in-hero="false"] .navbar-pill {
@@ -153,12 +160,44 @@ body {
    }
 }
 
+/* Botón hamburguesa: sin bg/borde raro, hover consistente */
+.rt-Button.hamburger-btn {
+   background: transparent !important;
+   border: 0 !important;
+   box-shadow: none !important;
+   border-radius: 999px !important;
+}
+
+/* Hover: mismo “vidrio oscuro” que el resto */
+.rt-Button.hamburger-btn:hover {
+   background: rgba(16, 16, 16, 0.72) !important;
+}
+
+/* Focus accesible y sutil (cian) */
+.rt-Button.hamburger-btn:focus-visible {
+   outline: 2px solid rgba(100, 255, 218, 0.35);
+   outline-offset: 3px;
+   box-shadow: none !important;
+}
+
 /* ===== Mobile drawer menu ===== */
 .mobile-menu-overlay {
    position: fixed;
    inset: 0;
-   z-index: 1000;
-   display: block;
+   z-index: 2000;
+
+   /* CERRADO por defecto (overlay siempre montado) */
+   visibility: hidden;
+   pointer-events: none;
+
+   /* espera a que termine el slide-out antes de ocultar */
+   transition: visibility 0s linear 500ms;
+}
+
+.mobile-menu-overlay.is-open {
+   visibility: visible;
+   pointer-events: auto;
+   transition: visibility 0s linear 0ms;
 }
 
 .mobile-menu-backdrop {
@@ -166,6 +205,13 @@ body {
    inset: 0;
    background: rgba(0, 0, 0, 0.6);
    backdrop-filter: blur(2px);
+
+   opacity: 0;
+   transition: opacity 240ms ease;
+}
+
+.mobile-menu-overlay.is-open .mobile-menu-backdrop {
+   opacity: 1;
 }
 
 .mobile-menu-panel {
@@ -183,17 +229,21 @@ body {
    overflow-y: auto;
    overscroll-behavior: contain;
    box-shadow: -16px 0 50px rgba(2, 12, 27, 0.45);
-   animation: drawer-in 180ms ease;
+
+   /* SLIDE (cerrado por defecto) */
+   transform: translateX(120%);
+   transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+   will-change: transform;
 }
 
-@keyframes drawer-in {
-   from {
-      opacity: 0;
-      transform: translateX(12px);
-   }
-   to {
-      opacity: 1;
-      transform: translateX(0);
+.mobile-menu-overlay.is-open .mobile-menu-panel {
+   transform: translateX(0);
+}
+
+@media (max-width: 480px) {
+   .mobile-menu-panel {
+      width: 100vw;
+      border-left: none;
    }
 }
 
@@ -229,6 +279,51 @@ body {
       width: 100vw;
       border-left: none;
    }
+}
+
+/* ===== Mobile hamburger (hamburguesa ⇄ X) ===== */
+.hamburger {
+   width: 24px;
+   height: 24px;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   gap: 5px;
+   -webkit-user-select: none;
+   user-select: none;
+}
+
+.hamburger-line {
+   display: block;
+   width: 22px;
+   height: 2px;
+   background: currentColor;
+   border-radius: 999px;
+
+   transform-origin: 4px 0px;
+   transition:
+      transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+      opacity 0.55s ease;
+}
+
+.hamburger-line:nth-child(1) {
+   transform-origin: 0% 0%;
+}
+.hamburger-line:nth-child(3) {
+   transform-origin: 0% 100%;
+}
+
+.hamburger.is-open .hamburger-line:nth-child(1) {
+   transform: rotate(45deg) translate(2px, 1px);
+}
+
+.hamburger.is-open .hamburger-line:nth-child(2) {
+   opacity: 0;
+   transform: scale(0.2);
+}
+
+.hamburger.is-open .hamburger-line:nth-child(3) {
+   transform: rotate(-45deg) translate(1px, -1px);
 }
 
 /* ===== Cards & effects ===== */

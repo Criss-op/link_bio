@@ -81,18 +81,47 @@ def navbar() -> rx.Component:
     )
 
     # ---------------- Mobile/Tablet (<lg) ----------------
+    hamburger_icon = rx.box(
+        rx.box(class_name="hamburger-line"),
+        rx.box(class_name="hamburger-line"),
+        rx.box(class_name="hamburger-line"),
+        class_name=rx.cond(UIState.mobile_open, "hamburger is-open", "hamburger"),
+    )
+
     mobile_bar = rx.hstack(
         rx.button(
-            rx.icon(tag="menu",size=24),
+            hamburger_icon,
             variant="ghost",
             color=text_color.HEADER.value,
             on_click=UIState.toggle_menu,
-            style={"padding": "0.55rem"},
+            class_name="hamburger-btn",
+            style={
+                "padding": "0.55rem",
+                "background": "transparent",
+                "border": "none",
+                "boxShadow": "none",
+                "outline": "none",
+            },
+            _hover={
+                "background": "transparent",
+                "border": "none",
+                "boxShadow": "none",
+            },
+            _active={
+                "background": "transparent",
+                "border": "none",
+                "boxShadow": "none",
+            },
+            _focus_visible={
+                "outline": "none",
+                "boxShadow": "none",
+            },
         ),
         width="100%",
         align="center",
         justify="end",
     )
+
 
     mobile_pill = rx.box(
         rx.box(
@@ -109,54 +138,49 @@ def navbar() -> rx.Component:
     )
 
     # ---------------- Drawer full height + backdrop ----------------
-    mobile_drawer = rx.cond(
-        UIState.mobile_open,
-        rx.box(
-            rx.box(
-                class_name="mobile-menu-backdrop",
+    # Importante: el overlay se mantiene montado para permitir animación al cerrar.
+    mobile_drawer = rx.box(
+    rx.box(
+        class_name="mobile-menu-backdrop",
+        on_click=UIState.close_menu,
+    ),
+    rx.box(
+        rx.vstack(
+            *[drawer_link(label, href) for label, href in NAV_ITEMS],
+            rx.link(
+                "Contacto",
+                href=f"mailto:{EMAIL_ADDRESS}",
+                class_name="mobile-menu-link",
+                color=text_color.HEADER.value,
+                font_weight="600",
+                _hover={"color": color.PRIMARY.value},
+                on_click=UIState.close_menu,
+                width="100%",
+            ),
+            rx.link(
+                "Proyectos 🔒",
+                href="/projects",
+                class_name="mobile-menu-link",
+                color=text_color.HEADER.value,
+                font_weight="600",
+                _hover={"color": color.PRIMARY.value},
                 on_click=UIState.close_menu,
             ),
-            rx.box(
-                rx.button(
-                    rx.icon(tag="x", size=24),
-                    variant="ghost",
-                    color=text_color.HEADER.value,
-                    on_click=UIState.close_menu,
-                    class_name="drawer-close",
-                    style={"padding": "0.35rem"},
-                ),
-                 rx.vstack(
-                    *[drawer_link(label, href) for label, href in NAV_ITEMS],
-                    rx.link(
-                        "Contacto",
-                        href=f"mailto:{EMAIL_ADDRESS}",
-                        class_name="mobile-menu-link",
-                        color=text_color.HEADER.value,
-                        font_weight="600",
-                        _hover={"color": color.PRIMARY.value},
-                        on_click=UIState.close_menu,
-                        width="100%",
-                    ),
-                     rx.link(
-                        "Proyectos 🔒",
-                        href="/projects",
-                        class_name="mobile-menu-link",
-                        color=text_color.HEADER.value,
-                        font_weight="600",
-                        _hover={"color": color.PRIMARY.value},
-                        on_click=UIState.close_menu,
-                     ),
-                    spacing="3",
-                    align_items="start",
-                    width="100%",
-                    class_name="drawer-links",
-                ),
-                class_name="mobile-menu-panel",
-            ),
-            class_name="mobile-menu-overlay",
-            display=rx.breakpoints(initial="flex", md="none", lg="none"),
+            spacing="3",
+            align_items="start",
+            width="100%",
+            class_name="drawer-links",
         ),
-    )
+        class_name="mobile-menu-panel",
+    ),
+    class_name=rx.cond(
+        UIState.mobile_open,
+        "mobile-menu-overlay is-open",
+        "mobile-menu-overlay",
+    ),
+    display=rx.breakpoints(initial="flex", md="none", lg="none"),
+)
+
 
     # ---------------- Wrapper fixed ----------------
     return rx.box(
@@ -169,7 +193,7 @@ def navbar() -> rx.Component:
             top="0",
             left="0",
             right="0",
-            z_index="999",
+            z_index="3000",
             padding_y=rx.breakpoints(initial="1rem", md="1rem", lg="0.75rem"),
         ),
         mobile_drawer,
