@@ -60,7 +60,7 @@ def navbar() -> rx.Component:
         ),
         spacing="4",
         align="center",
-        display=rx.breakpoints(initial="none", md="none", lg="flex"),
+        display=rx.breakpoints(initial="none", md="flex", lg="flex"),
     )
 
     desktop_pill = rx.center(
@@ -77,7 +77,7 @@ def navbar() -> rx.Component:
             class_name="navbar-pill",
         ),
         width="100%",
-        display=rx.breakpoints(initial="none", md="none", lg="flex"),
+        display=rx.breakpoints(initial="none", md="flex", lg="flex"),
     )
 
     # ---------------- Mobile/Tablet (<lg) ----------------
@@ -103,7 +103,7 @@ def navbar() -> rx.Component:
             margin_right="2rem",
         ),
         width="100%",
-        display=rx.breakpoints(initial="flex", md="flex", lg="none"),
+        display=rx.breakpoints(initial="flex", md="none", lg="none"),
         justify_content="flex-end",
 
     )
@@ -154,7 +154,7 @@ def navbar() -> rx.Component:
                 class_name="mobile-menu-panel",
             ),
             class_name="mobile-menu-overlay",
-            display=rx.breakpoints(initial="flex", md="flex", lg="none"),
+            display=rx.breakpoints(initial="flex", md="none", lg="none"),
         ),
     )
 

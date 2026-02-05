@@ -25,7 +25,7 @@ def section_container(section_id: str, *children: rx.Component) -> rx.Component:
             width="100%",
         ),
         id=section_id,
-        padding_x="1.5rem",
+        padding_x=rx.breakpoints(initial="2.5rem", md="5.5rem", lg="1.5rem"),
         padding_y=rx.breakpoints(initial="3.5rem", md="4.5rem"),
         scroll_margin_top="6rem",
         color=text_color.BODY.value,

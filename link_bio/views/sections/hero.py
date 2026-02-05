@@ -30,7 +30,7 @@ def hero_container(section_id: str, main: rx.Component, *overlays: rx.Component)
         ),
         *overlays,
         id=section_id,
-        padding_x="1.5rem",
+        padding_x=rx.breakpoints(initial="2.5rem", md="5.5rem", lg="1.5rem"),
         padding_top="var(--navbar-safe-top)",
         padding_bottom=rx.breakpoints(initial="3.5rem", md="4.5rem"),
         scroll_margin_top="6rem",
@@ -38,6 +38,7 @@ def hero_container(section_id: str, main: rx.Component, *overlays: rx.Component)
         position="relative",
         class_name="section",
         width="100%",
+        box_sizing="border-box",
     )
 
 
@@ -148,7 +149,7 @@ def hero_section() -> rx.Component:
                     "Hola, mi nombre es:",
                     font_size=rx.breakpoints(initial="0.95rem", md="1.05rem"),
                     color=text_color.PRIMARY.value,
-                    font_weight="500",
+                    font_weight="700",
                     text_align="center",
                 ),
                 rx.hstack(
@@ -159,11 +160,17 @@ def hero_section() -> rx.Component:
                         line_height="1.05",
                         margin="0",
                         class_name="hero-name",
+                        flex="1",
+                        min_width="0",
+                        text_align="center",
                     ),
                     rx.box(SPARKLE_RIGHT, class_name="name-sparkle-wrap right"),
                     align="center",
+                    justify="center",
                     spacing="0",
+                    width="100%",
                 ),
+
                 rx.heading(
                     TAGLINE,
                     font_size=rx.breakpoints(initial="1.1rem", md="1.5rem", lg="1.7rem"),
@@ -251,14 +258,16 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                 ),
                 class_name="skills-slider",
                 width="100%",
-                max_width="800px",
+                max_width=rx.breakpoints(initial="100%", md="800px"),
                 overflow="hidden",
             ),
 
             spacing="4",
             align_items="start",
-            max_width="800px",
-            width="100%",
+            max_width=rx.breakpoints(initial="100%", md="800px"),
+            width="auto",
+            flex="1",
+            min_width="0",
         ),
 
         direction=rx.breakpoints(initial="column", md="row"),
