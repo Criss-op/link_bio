@@ -4,16 +4,20 @@ from link_bio.styles.colors import TextColor as text_color
 from link_bio.styles.styles import card_style
 
 
-def list_block(title: str, items: list[str]) -> rx.Component:
+def education_card(title: str, org: str, period: str, bullets: list[str]) -> rx.Component:
     return rx.vstack(
-        rx.text(title, font_size="1.1rem", font_weight="600"),
+        rx.text(title, font_size="1.2rem", font_weight="600"),
+        rx.text(org, color=text_color.BODY.value, opacity="0.80"),
+        rx.text(period, color=text_color.BODY.value, opacity="0.70"),
         rx.vstack(
-            *[rx.text(item) for item in items],
+            *[rx.text(f"• {item}", color=text_color.BODY.value, opacity="0.90") for item in bullets],
             spacing="2",
-            color=text_color.BODY.value,
+            align_items="start",
+            width="100%",
         ),
         spacing="3",
         align_items="start",
+        width="100%",
         **card_style,
     )
 
@@ -21,23 +25,50 @@ def list_block(title: str, items: list[str]) -> rx.Component:
 def education_section() -> rx.Component:
     return section_container(
         "formacion",
-        section_header("Formación"),
+        rx.box(
+            section_header("Formación", "Base técnica + gestión + liderazgo"),
+            class_name="sr-fade-up",
+            custom_attrs={"data-sr-delay": "0"},
+        ),
         rx.grid(
-            list_block(
-                "Formación académica",
-                [
-                    "Ingeniería en Informática (INACAP)",
-                    "Diplomado en Control de Gestión (PUC – Clase Ejecutiva UC)",
-                    "Diplomado en Estrategias de Liderazgo Efectivo (PUC – Clase Ejecutiva UC)",
-                ],
+            rx.box(
+                education_card(
+                    "Ingeniería en Informática",
+                    "INACAP",
+                    "Formación universitaria",
+                    [
+                        "Base sólida en desarrollo, lógica y resolución de problemas.",
+                        "Enfoque práctico: implementación, mejora y mantenimiento.",
+                    ],
+                ),
+                class_name="sr-card",
+                custom_attrs={"data-sr-delay": "180"},
             ),
-            list_block(
-                "Cursos y certificaciones",
-                [
-                    "Compras Públicas (placeholder)",
-                    "Automatización / Python (placeholder)",
-                    "Gestión / Control (placeholder)",
-                ],
+            rx.box(
+                education_card(
+                    "Diplomado en Control de Gestión",
+                    "Pontificia Universidad Católica de Chile (PUC) — Clase Ejecutiva UC",
+                    "En curso / reciente",
+                    [
+                        "Indicadores, control y seguimiento de desempeño.",
+                        "Enfoque en toma de decisiones con métricas y objetivos.",
+                    ],
+                ),
+                class_name="sr-card",
+                custom_attrs={"data-sr-delay": "300"},
+            ),
+            rx.box(
+                education_card(
+                    "Diplomado en Estrategias para un Liderazgo Efectivo",
+                    "Pontificia Universidad Católica de Chile (PUC)",
+                    "En curso / reciente",
+                    [
+                        "Comunicación, coordinación y liderazgo aplicado.",
+                        "Herramientas de influencia y gestión de equipos.",
+                    ],
+                ),
+                class_name="sr-card",
+                custom_attrs={"data-sr-delay": "420"},
             ),
             columns=rx.breakpoints(initial="1", md="2"),
             spacing="4",

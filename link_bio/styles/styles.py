@@ -16,6 +16,12 @@ STYLESHEETS = [
     "/avatar_glow.css",
     "/hero_links.css",
     "/skills_carousel.css",
+    "/scroll_reveal.css",
+    "/rails_reveal.css",
+    "/navbar_reveal.css",
+    "/cursor_dot.css",
+    "/postit.css",
+
 ]
 
 

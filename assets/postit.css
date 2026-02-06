@@ -1,0 +1,215 @@
+/* Handwritten solo dentro del post-it */
+@import url("https://fonts.googleapis.com/css2?family=Satisfy&display=swap");
+
+.postit-wrap {
+   display: flex;
+   gap: 18px;
+   flex-wrap: wrap;
+   justify-content: center;
+   width: 100%;
+}
+
+.postit {
+   position: relative;
+   border-radius: 14px;
+   padding: 18px 16px 14px;
+
+   /* sombra más sutil y “real” */
+   box-shadow:
+      0 14px 26px rgba(0, 0, 0, 0.4),
+      0 2px 0 rgba(255, 255, 255, 0.06) inset;
+
+   border: 1px solid rgba(0, 0, 0, 0.16);
+
+   transform-origin: 42% 12%;
+   user-select: none;
+
+   /* tamaño: no enorme, y mantiene proporción; alto siempre auto */
+   width: min(92vw, 340px);
+
+   /* inclinación por defecto */
+   transform: rotate(-2.2deg);
+
+   /* animación de “apertura” al cargar */
+   animation: postit-open 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* md: baja ancho, no baja alto */
+@media (min-width: 768px) {
+   .postit {
+      width: 320px;
+   }
+}
+
+/* lg: compacto (como te gustó) */
+@media (min-width: 1024px) {
+   .postit {
+      width: 280px;
+   }
+}
+
+/* Variantes de color (más saturadas para tu fondo oscuro) */
+.postit--yellow {
+   background: linear-gradient(180deg, #ffe97a 0%, #ffd84a 100%);
+}
+.postit--green {
+   background: linear-gradient(180deg, #bff7c7 0%, #6fe7a2 100%);
+}
+
+/* “Papel” con textura sutil */
+.postit::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: 14px;
+   background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.1) 0px,
+      rgba(255, 255, 255, 0.1) 1px,
+      rgba(255, 255, 255, 0) 7px,
+      rgba(255, 255, 255, 0) 12px
+   );
+   opacity: 0.18;
+   pointer-events: none;
+}
+
+/* Pin (inspirado en tu estilo 2, adaptado a cian/metal) */
+.postit-pin {
+   position: absolute;
+   left: 46%;
+   top: -18px;
+   width: 2px;
+   height: 32px;
+   background: rgba(210, 210, 210, 0.9);
+   z-index: 2;
+}
+
+.postit-pin::after {
+   content: "";
+   position: absolute;
+   top: -10px;
+   left: -6px;
+   width: 14px;
+   height: 14px;
+   border-radius: 50%;
+
+   /* rojo caramelo */
+   background:
+      radial-gradient(
+         circle at 30% 30%,
+         rgba(255, 255, 255, 0.55) 0%,
+         rgba(255, 255, 255, 0.1) 35%,
+         rgba(0, 0, 0, 0.22) 88%
+      ),
+      radial-gradient(circle at 55% 55%, #ff4a4a 0%, #c51616 70%);
+
+   box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.18),
+      0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.postit-pin::before {
+   content: "";
+   position: absolute;
+   top: 10px;
+   left: 0px;
+   width: 2px;
+   height: 26px;
+   background: rgba(0, 0, 0, 0.1);
+   transform: rotate(57.5deg);
+   transform-origin: 50% 100%;
+   box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.1);
+}
+
+.postit-title {
+   font-family: "Satisfy", cursive;
+   font-size: 30px;
+   line-height: 1.05;
+   letter-spacing: 0.2px;
+   color: rgba(10, 10, 10, 0.86);
+   padding-top: 8px;
+   text-align: center;
+}
+
+/* Contenido (3 ítems) */
+.postit-body {
+   margin-top: 12px;
+   display: grid;
+   gap: 10px;
+   font-family:
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      Arial,
+      sans-serif;
+   color: rgba(10, 10, 10, 0.82);
+   font-weight: 650;
+}
+
+.postit-quote {
+   font-family: "Satisfy", cursive;
+   font-size: 22px;
+   line-height: 1.25;
+   color: rgba(10, 10, 10, 0.84);
+   margin-top: 10px;
+   text-align: center;
+}
+
+.postit-item {
+   display: flex;
+   gap: 10px;
+   align-items: flex-start;
+}
+
+.postit-num {
+   width: 22px;
+   height: 22px;
+   border-radius: 999px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 0.85rem;
+   font-weight: 900;
+   line-height: 1;
+   color: rgba(10, 10, 10, 0.75);
+   background: rgba(255, 255, 255, 0.35);
+   border: 1px solid rgba(0, 0, 0, 0.12);
+   flex: 0 0 auto;
+   margin-top: 1px;
+}
+
+/* Animación entrada + hover estilo 1 */
+.postit {
+   transition:
+      transform 180ms linear,
+      box-shadow 180ms linear;
+}
+
+.postit:hover {
+   transform: rotate(0deg) scale(1.18);
+   box-shadow:
+      0 18px 34px rgba(0, 0, 0, 0.55),
+      0 2px 0 rgba(255, 255, 255, 0.06) inset;
+   z-index: 20;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+   .postit,
+   .postit:hover {
+      transition: none;
+      transform: none;
+   }
+}
+
+@keyframes postit-open {
+   0% {
+      opacity: 0;
+      transform: translateY(10px) rotate(-6deg) scale(0.96);
+   }
+   100% {
+      opacity: 1;
+      transform: translateY(0) rotate(-2.2deg) scale(1);
+   }
+}

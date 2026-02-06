@@ -1,0 +1,48 @@
+/* Evita flash al cargar: mientras NO exista data-in-hero, asumimos estado "hero" */
+:root:not([data-in-hero]) .navbar-pill {
+   background: transparent !important;
+   border-color: transparent !important;
+   box-shadow: none !important;
+   backdrop-filter: none !important;
+}
+
+/* Navbar motion: entrada más notoria del pill al salir del hero */
+.navbar-pill {
+   transition:
+      background 220ms ease,
+      border-color 220ms ease,
+      box-shadow 220ms ease,
+      backdrop-filter 220ms ease,
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+   will-change: transform, opacity;
+}
+
+/* En hero: el pill queda “más liviano” y un poco arriba (sin romper navegación) */
+:root[data-in-hero="true"] .navbar-pill {
+   transform: translateY(-10px);
+   opacity: 0.92;
+}
+
+:root[data-in-hero="false"] .navbar-pill {
+   transform: translateY(0);
+   opacity: 1;
+}
+
+/* Drawer abierto: no queremos movimiento (y ya lo haces transparente en ui_effects.css) */
+:root[data-drawer-open="true"] .navbar-pill {
+   transform: none !important;
+   opacity: 1 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .navbar-pill {
+      transition:
+         background 220ms ease,
+         border-color 220ms ease,
+         box-shadow 220ms ease;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+   }
+}

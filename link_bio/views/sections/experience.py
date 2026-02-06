@@ -20,27 +20,31 @@ def experience_card(title: str, context: str, detail: str, bullets: list[str]) -
     )
 
 
-
 def experience_section() -> rx.Component:
     return section_container(
         "experiencia",
-        section_header("Experiencia"),
+        rx.box(
+            section_header("Experiencia"),
+            class_name="sr-fade-up",
+            custom_attrs={"data-sr-delay": "0"},
+        ),
         rx.grid(
-            experience_card(
-                "2023–2025 | Hospital San Juan de Dios de Cauquenes (Sector público)",
-                "Departamento de Abastecimiento — Compras públicas, licitaciones y contratos.",
-                "Rol: Gestión y coordinación de procesos de abastecimiento.",
-                [
-                    "Coordinación de procesos entre áreas técnicas y administrativas.",
-                    "Responsable de la gestión de procesos licitatorios y contratos asociados.",
-                    "Seguimiento de hitos, plazos y respaldos para asegurar trazabilidad.",
-                    "Estandarización de documentos, plantillas y checklists para reducir retrabajo.",
-                ],
+            rx.box(
+                experience_card(
+                    "2023–2025 | Hospital San Juan de Dios de Cauquenes (Sector público)",
+                    "Departamento de Abastecimiento — Compras públicas, licitaciones y contratos.",
+                    "Rol: Gestión y coordinación de procesos de abastecimiento.",
+                    [
+                        "Coordinación de procesos entre áreas técnicas y administrativas.",
+                        "Responsable de la gestión de procesos licitatorios y contratos asociados.",
+                        "Seguimiento de hitos, plazos y respaldos para asegurar trazabilidad.",
+                        "Estandarización de documentos, plantillas y checklists para reducir retrabajo.",
+                    ],
+                ),
+                class_name="sr-card",
+                custom_attrs={"data-sr-delay": "180"},
             ),
-            
-         
             columns=rx.breakpoints(initial="1", md="1"),
-
             spacing="4",
             width="100%",
         ),

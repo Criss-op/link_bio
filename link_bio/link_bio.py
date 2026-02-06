@@ -21,6 +21,7 @@ from link_bio.views.sections import (
 def index() -> rx.Component:
     return rx.box(
         rx.el.div(class_name="cursor-spotlight"),
+        rx.el.div(class_name="cursor-dot"),
         navbar(),
         side_rails(),
         rx.box(
@@ -43,6 +44,8 @@ def index() -> rx.Component:
         rx.script(src="/rails_docking.js"),
         rx.script(src="/avatar_glow.js"),
         rx.script(src="/navbar_active.js"),
+        rx.script(src="https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js"),
+        rx.script(src="/scroll_reveal.js"),
 
     )
 

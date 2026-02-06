@@ -138,7 +138,8 @@ def hero_section() -> rx.Component:
                 border_radius="80px",
             ),
             id="cris-avatar-wrap",
-            class_name="avatar-wrap",
+            class_name="avatar-wrap sr-card",
+            custom_attrs={"data-sr-delay": "900"},
             flex_shrink="0",
         ),
 
@@ -151,6 +152,8 @@ def hero_section() -> rx.Component:
                     color=text_color.PRIMARY.value,
                     font_weight="700",
                     text_align="center",
+                    class_name="sr-fade-up",
+                    custom_attrs={"data-sr-delay": "0"},
                 ),
                 rx.hstack(
                     rx.box(SPARKLE_LEFT, class_name="name-sparkle-wrap left"),
@@ -169,6 +172,8 @@ def hero_section() -> rx.Component:
                     justify="center",
                     spacing="0",
                     width="100%",
+                    class_name="sr-fade-up",
+                    custom_attrs={"data-sr-delay": "160"},
                 ),
 
                 rx.heading(
@@ -178,6 +183,8 @@ def hero_section() -> rx.Component:
                     color=color.PRIMARY.value,
                     font_weight="700",
                     text_align="center",
+                    class_name="sr-fade-up",
+                    custom_attrs={"data-sr-delay": "320"},
                 ),
                 spacing="2",
                 align_items="center",
@@ -193,6 +200,8 @@ def hero_section() -> rx.Component:
                 flex_wrap="wrap",
                 width="100%",
                 justify="start",
+                class_name="sr-fade-up",
+                custom_attrs={"data-sr-delay": "480"},
             ),
 
             # PÁRRAFO
@@ -206,6 +215,8 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                 line_height="1.7",
                 max_width="800px",
                 width="100%",
+                class_name="sr-fade-up",
+                custom_attrs={"data-sr-delay": "640"},
             ),
 
             # CARRUSEL PLANO (limitado a 800px y recortado para que no se desborde)
@@ -215,7 +226,7 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                         rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
                         rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
                         rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
-                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
+                        rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
                         rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),
                         rx.image(src="/icons_skills/mercadopublico.png", class_name="skills-icon", alt="Mercado Público"),
                         rx.image(src="/icons_skills/scrum.png", class_name="skills-icon", alt="Scrum"),
@@ -236,7 +247,7 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                         rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
                         rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
                         rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
-                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
+                        rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
                         rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),
                         rx.image(src="/icons_skills/mercadopublico.png", class_name="skills-icon", alt="Mercado Público"),
                         rx.image(src="/icons_skills/scrum.png", class_name="skills-icon", alt="Scrum"),
@@ -256,7 +267,8 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                     ),
                     class_name="skills-track",
                 ),
-                class_name="skills-slider",
+                class_name="skills-slider sr-card",
+                custom_attrs={"data-sr-delay": "760"},
                 width="100%",
                 max_width=rx.breakpoints(initial="100%", md="800px"),
                 overflow="hidden",
@@ -282,7 +294,8 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
 
     scroll_indicator = rx.box(
         rx.icon(tag="chevron-down", size=36),
-        class_name="scroll-indicator",
+        class_name="scroll-indicator sr-fade",
+        custom_attrs={"data-sr-delay": "820"},
         color=text_color.MUTED.value,
     )
 

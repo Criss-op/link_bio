@@ -1,0 +1,6 @@
+/* ScrollReveal targets (opt-in) */
+.sr-fade-up,
+.sr-fade,
+.sr-card {
+   will-change: transform, opacity;
+}

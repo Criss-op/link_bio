@@ -1,0 +1,35 @@
+/* Cursor dot: solo desktop + sin reduced motion */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+   /* Oculta el cursor nativo */
+   html,
+   body,
+   #page-scroll,
+   a,
+   button {
+      cursor: none !important;
+   }
+
+   .cursor-dot {
+      position: fixed;
+      left: var(--mx);
+      top: var(--my);
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+
+      background: #ecebf3; /* TextColor.BODY */
+      opacity: 0.95;
+
+      pointer-events: none;
+      z-index: 5000;
+
+      transform: translate(-50%, -50%);
+   }
+}
+
+/* En touch o reduced motion: no mostrar dot (y no ocultar cursor) */
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+   .cursor-dot {
+      display: none;
+   }
+}

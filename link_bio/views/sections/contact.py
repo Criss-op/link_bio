@@ -9,37 +9,51 @@ from link_bio.styles.styles import card_style
 def contact_section() -> rx.Component:
     return section_container(
         "contacto",
-        section_header("Contacto"),
+        # Header
+        rx.box(
+            section_header("Contacto"),
+            class_name="sr-fade-up",
+            custom_attrs={"data-sr-delay": "0"},
+        ),
+        # Texto
         rx.text(
             "Si quieres conversar por una oportunidad profesional, colaboración o un proyecto específico, escríbeme. "
             "Respondo con claridad y directo al punto.",
+            class_name="sr-fade-up",
+            custom_attrs={"data-sr-delay": "120"},
         ),
+        # Card (wrapper con sr-card para no chocar con card_style.class_name)
         rx.box(
-            rx.vstack(
-                rx.text(EMAIL_ADDRESS, font_weight="600"),
-                rx.hstack(
-                    rx.link(
-                        rx.button(
-                            "Escríbeme",
-                            background_color=color.PRIMARY.value,
-                            color="white",
-                            padding_x="1.5rem",
-                            padding_y="0.75rem",
+            rx.box(
+                rx.vstack(
+                    rx.text(EMAIL_ADDRESS, font_weight="600"),
+                    rx.hstack(
+                        rx.link(
+                            rx.button(
+                                "Escríbeme",
+                                background_color=color.PRIMARY.value,
+                                color="white",
+                                padding_x="1.5rem",
+                                padding_y="0.75rem",
+                            ),
+                            href=f"mailto:{EMAIL_ADDRESS}",
                         ),
-                        href=f"mailto:{EMAIL_ADDRESS}",
+                        spacing="3",
+                    ),
+                    rx.hstack(
+                        rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
+                        rx.link("GitHub", href=GITHUB_URL, is_external=True),
+                        spacing="4",
+                        color=text_color.MUTED.value,
                     ),
                     spacing="3",
+                    align_items="start",
                 ),
-                rx.hstack(
-                    rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
-                    rx.link("GitHub", href=GITHUB_URL, is_external=True),
-                    spacing="4",
-                    color=text_color.MUTED.value,
-                ),
-                spacing="3",
-                align_items="start",
+                **card_style,
+                width="100%",
             ),
-            **card_style,
+            class_name="sr-card",
+            custom_attrs={"data-sr-delay": "240"},
             width="100%",
         ),
     )
