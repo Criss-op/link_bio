@@ -204,12 +204,15 @@ def hero_section() -> rx.Component:
                 custom_attrs={"data-sr-delay": "480"},
             ),
 
-            # PÁRRAFO
+           # PÁRRAFO
             rx.text(
-                """Soy Ingeniero en Informática, con experiencia en gestión de procesos, compras públicas y entornos operativos.
-Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan.
-Me gusta moverme en la intersección entre gestión, tecnología y automatización: ordenar sistemas, optimizar flujos
-y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!""",
+                "Soy Ingeniero en Informática, con experiencia en ",
+                rx.el.strong("gestión de procesos, compras públicas y entornos operativos.", style={"fontWeight": "800"}),
+                " Disfruto metiéndome donde hay desorden: flujos poco claros, tareas repetidas y sistemas que no conversan. "
+                "Me gusta moverme en la intersección entre ",
+                rx.el.strong("gestión, tecnología y automatización:", style={"fontWeight": "800"}),
+                " ordenar sistemas, optimizar flujos y construir soluciones prácticas que se notan en el día a día. ",
+                rx.el.strong("¡Bienvenid@!", style={"fontWeight": "800"}),
                 color=text_color.BODY.value,
                 font_size=rx.breakpoints(initial="1rem", md="1.05rem", lg="1.1rem"),
                 line_height="1.7",
@@ -218,6 +221,7 @@ y construir soluciones prácticas que se notan en el día a día. ¡Bienvenid@!"
                 class_name="sr-fade-up",
                 custom_attrs={"data-sr-delay": "640"},
             ),
+
 
             # CARRUSEL PLANO (limitado a 800px y recortado para que no se desborde)
             rx.box(

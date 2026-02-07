@@ -1,62 +1,109 @@
-/* Handwritten solo dentro del post-it */
+/* assets/postit.css
+   Post-it flotante (derecha) pensado para convivir con texto.
+
+   Reglas clave:
+   - “Pegado arriba”: va como primer elemento del bloque superior.
+   - Wrap del texto: float (no funciona si el post-it es flex-item directo).
+   - Hover crece hacia el exterior: transform-origin a la izquierda, estando flotado a la derecha.
+*/
+
 @import url("https://fonts.googleapis.com/css2?family=Satisfy&display=swap");
 
-.postit-wrap {
-   display: flex;
-   gap: 18px;
-   flex-wrap: wrap;
-   justify-content: center;
-   width: 100%;
+/* No mostrar en initial */
+.postit-float-right {
+   display: none;
+}
+
+@media (min-width: 768px) {
+   .postit-float-right {
+      display: block;
+      float: right;
+
+      /* Mantén tu offset */
+      margin: calc(-4.5rem + 30px) 0 14px 18px;
+
+      /* FIX: que quede por encima del texto para que el hover entre por cualquier lado */
+      position: relative;
+      z-index: 20;
+      pointer-events: auto;
+   }
+}
+
+/* En lg mantenemos la misma lógica (si quieres un ajuste distinto, cámbialo aquí) */
+@media (min-width: 1024px) {
+   .postit-float-right {
+      margin-top: calc(-4.5rem + 30px);
+   }
+}
+
+/* Limpia el float para que el contenedor lo “envuelva” y no se solape lo siguiente */
+.postit-clear {
+   clear: both;
+   height: 0;
 }
 
 .postit {
    position: relative;
    border-radius: 14px;
-   padding: 18px 16px 14px;
-
-   /* sombra más sutil y “real” */
-   box-shadow:
-      0 14px 26px rgba(0, 0, 0, 0.4),
-      0 2px 0 rgba(255, 255, 255, 0.06) inset;
-
-   border: 1px solid rgba(0, 0, 0, 0.16);
-
-   transform-origin: 42% 12%;
+   padding: 16px 14px 12px;
    user-select: none;
 
-   /* tamaño: no enorme, y mantiene proporción; alto siempre auto */
-   width: min(92vw, 340px);
+   /* tamaños: más pequeño en mobile, crece en md/lg */
+   width: min(72vw, 140px);
 
-   /* inclinación por defecto */
-   transform: rotate(-2.2deg);
+   box-shadow: none;
+   border: 1px solid rgba(0, 0, 0, 0.16);
 
-   /* animación de “apertura” al cargar */
-   animation: postit-open 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+   /* clave para crecer hacia afuera (derecha) */
+   transform-origin: 0% 0%;
+   transform: rotate(-3.4deg);
+
+   transition:
+      transform 180ms linear,
+      box-shadow 180ms linear;
+   will-change: transform;
 }
 
-/* md: baja ancho, no baja alto */
 @media (min-width: 768px) {
+   .postit-author {
+      font-size: 14px;
+   }
+   .postit-title {
+      font-size: 22px;
+   }
+   .postit-quote {
+      font-size: 16px;
+   }
    .postit {
-      width: 320px;
+      width: 150px;
+      padding: 18px 16px 14px;
    }
 }
 
-/* lg: compacto (como te gustó) */
 @media (min-width: 1024px) {
+   .postit-author {
+      font-size: 16px;
+   }
+   .postit-title {
+      font-size: 24px;
+   }
+   .postit-quote {
+      font-size: 18px;
+   }
    .postit {
-      width: 280px;
+      width: 180px;
    }
 }
 
-/* Variantes de color (más saturadas para tu fondo oscuro) */
 .postit--yellow {
    background: linear-gradient(180deg, #ffe97a 0%, #ffd84a 100%);
 }
+
 .postit--green {
    background: linear-gradient(180deg, #bff7c7 0%, #6fe7a2 100%);
 }
 
-/* “Papel” con textura sutil */
+/* textura sutil */
 .postit::after {
    content: "";
    position: absolute;
@@ -73,7 +120,7 @@
    pointer-events: none;
 }
 
-/* Pin (inspirado en tu estilo 2, adaptado a cian/metal) */
+/* pin */
 .postit-pin {
    position: absolute;
    left: 46%;
@@ -92,8 +139,6 @@
    width: 14px;
    height: 14px;
    border-radius: 50%;
-
-   /* rojo caramelo */
    background:
       radial-gradient(
          circle at 30% 30%,
@@ -102,7 +147,6 @@
          rgba(0, 0, 0, 0.22) 88%
       ),
       radial-gradient(circle at 55% 55%, #ff4a4a 0%, #c51616 70%);
-
    box-shadow:
       inset 0 0 0 1px rgba(0, 0, 0, 0.18),
       0 10px 10px rgba(0, 0, 0, 0.22);
@@ -121,86 +165,40 @@
    box-shadow: 0 0 0.25em rgba(0, 0, 0, 0.1);
 }
 
+/* texto */
 .postit-title {
    font-family: "Satisfy", cursive;
-   font-size: 30px;
+   font-weight: 800;
    line-height: 1.05;
-   letter-spacing: 0.2px;
    color: rgba(10, 10, 10, 0.86);
    padding-top: 8px;
    text-align: center;
 }
 
-/* Contenido (3 ítems) */
-.postit-body {
-   margin-top: 12px;
-   display: grid;
-   gap: 10px;
-   font-family:
-      system-ui,
-      -apple-system,
-      Segoe UI,
-      Roboto,
-      Arial,
-      sans-serif;
-   color: rgba(10, 10, 10, 0.82);
-   font-weight: 650;
-}
-
 .postit-quote {
    font-family: "Satisfy", cursive;
-   font-size: 22px;
    line-height: 1.25;
    color: rgba(10, 10, 10, 0.84);
    margin-top: 10px;
    text-align: center;
 }
+.postit-author {
+   font-family: "Satisfy", cursive;
+   line-height: 1.15;
 
-.postit-item {
-   display: flex;
-   gap: 10px;
-   align-items: flex-start;
+   /* el autor a la derecha */
+   text-align: right;
+
+   /* efecto “cita” */
+   margin-top: 10px;
+   padding-right: 10px;
+
+   color: rgba(10, 10, 10, 0.78);
 }
 
-.postit-num {
-   width: 22px;
-   height: 22px;
-   border-radius: 999px;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   font-size: 0.85rem;
-   font-weight: 900;
-   line-height: 1;
-   color: rgba(10, 10, 10, 0.75);
-   background: rgba(255, 255, 255, 0.35);
-   border: 1px solid rgba(0, 0, 0, 0.12);
-   flex: 0 0 auto;
-   margin-top: 1px;
-}
-
-/* Animación entrada + hover estilo 1 */
-.postit {
-   transition:
-      transform 180ms linear,
-      box-shadow 180ms linear;
-}
-
-.postit:hover {
-   transform: rotate(0deg) scale(1.18);
-   box-shadow:
-      0 18px 34px rgba(0, 0, 0, 0.55),
-      0 2px 0 rgba(255, 255, 255, 0.06) inset;
-   z-index: 20;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-   .postit,
-   .postit:hover {
-      transition: none;
-      transform: none;
-   }
+/* apertura controlada por clase (la agrega ScrollReveal) */
+.postit.is-open {
+   animation: postit-open 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @keyframes postit-open {
@@ -210,6 +208,21 @@
    }
    100% {
       opacity: 1;
-      transform: translateY(0) rotate(-2.2deg) scale(1);
+      transform: rotate(-3.4deg);
+   }
+}
+
+/* hover: crece hacia afuera */
+.postit:hover {
+   transform: rotate(0deg) scale(1.14);
+   box-shadow: none;
+   z-index: 60;
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .postit,
+   .postit:hover {
+      transition: none;
+      animation: none;
    }
 }

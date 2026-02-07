@@ -11,7 +11,7 @@ CONTENT_GAP = "2.5rem"
 SECTION_PADDING = "5rem"
 
 STYLESHEETS = [
-    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap",
+    "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap",
     "/ui_effects.css",
     "/avatar_glow.css",
     "/hero_links.css",
@@ -21,6 +21,8 @@ STYLESHEETS = [
     "/navbar_reveal.css",
     "/cursor_dot.css",
     "/postit.css",
+    "/footer.css",
+
 
 ]
 

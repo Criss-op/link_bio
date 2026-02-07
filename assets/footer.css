@@ -1,0 +1,213 @@
+/* assets/footer.css */
+
+.app-footer {
+   position: relative;
+   overflow: hidden;
+   background: #0a0a0a;
+   border-top: 1px solid rgba(35, 53, 84, 0.65);
+}
+
+/* BG image detrás de TODO el footer */
+.app-footer::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background-image: url("/footer_bg.jpg");
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+
+   /* Ajusta aquí el “peso” del fondo */
+   opacity: 0.18;
+   filter: brightness(0.55) saturate(0.85) contrast(1.05);
+
+   pointer-events: none;
+   z-index: 0;
+}
+
+/* Franja superior (más clara) */
+.footer-topbar {
+   background: rgba(255, 255, 255, 0.05);
+   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+   padding: 0.9rem 1.5rem;
+}
+
+.footer-topbar-inner {
+   width: 100%;
+   max-width: 900px;
+   margin: 0 auto;
+}
+
+.footer-topbar-name {
+   color: rgba(230, 241, 255, 0.92);
+   font-weight: 600;
+   letter-spacing: 0.2px;
+}
+
+/* Contenido principal */
+.footer-main {
+   padding: 2.1rem 1.5rem 1.6rem;
+}
+
+.footer-inner {
+   width: 100%;
+   max-width: 900px; /* más angosto que el sitio */
+   margin: 0 auto;
+   position: relative;
+   z-index: 1;
+}
+
+/* Grid: izquierda + figura a la derecha (md+) */
+.footer-grid {
+   display: grid;
+   grid-template-columns: 1fr;
+   gap: 2rem;
+   align-items: start;
+}
+
+@media (min-width: 768px) {
+   .footer-grid {
+      grid-template-columns: 1fr auto; /* nunca abajo */
+      gap: 2.4rem;
+   }
+}
+
+.footer-title {
+   color: rgba(230, 241, 255, 0.9);
+   font-weight: 600;
+   font-size: 1rem;
+   letter-spacing: 0.2px;
+}
+
+.footer-built {
+   color: rgba(136, 146, 176, 0.95);
+   font-size: 0.92rem;
+   margin-top: 0.35rem;
+}
+
+.footer-links {
+   display: grid;
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 1.25rem 1.6rem;
+   margin-top: 1.55rem;
+}
+
+@media (min-width: 768px) {
+   .footer-links {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+      margin-top: 1.7rem;
+   }
+}
+
+.footer-col-title {
+   margin: 0 0 0.45rem 0;
+   font-size: 0.85rem;
+   font-weight: 600;
+   color: rgba(230, 241, 255, 0.68);
+   letter-spacing: 0.02em;
+}
+
+/* Ojo: aunque uses VStack, esto asegura look consistente */
+.footer-links a,
+.footer-links span {
+   color: rgba(136, 146, 176, 0.95);
+   font-size: 0.92rem;
+   opacity: 0.95;
+   transition:
+      opacity 160ms ease,
+      color 160ms ease;
+}
+
+.footer-links a:hover {
+   color: rgba(230, 241, 255, 0.92);
+   opacity: 1;
+}
+
+.footer-bottom {
+   margin-top: 1.6rem;
+   padding-top: 1.1rem;
+   border-top: 1px solid rgba(35, 53, 84, 0.65);
+   color: rgba(136, 146, 176, 0.95);
+   font-size: 0.9rem;
+}
+
+/* ===== Imagen (md+), sin borde, flotando y opaca por defecto ===== */
+
+.footer-figure {
+   display: none; /* initial: no aparece */
+}
+
+@media (min-width: 768px) {
+   .footer-figure {
+      display: block;
+      justify-self: end;
+      align-self: start;
+      position: relative;
+      z-index: 2;
+   }
+}
+
+/* Flotación sutil */
+.footer-float {
+   display: inline-block;
+   animation: footer-float 5.2s ease-in-out infinite;
+}
+
+.footer-float:hover {
+   animation-play-state: paused;
+}
+
+@keyframes footer-float {
+   0%,
+   100% {
+      transform: translateY(0);
+   }
+   50% {
+      transform: translateY(-10px);
+   }
+}
+
+/* Imagen: apagada por defecto (sin “marco” rectangular) */
+.footer-img {
+   display: block;
+   width: 380px;
+   height: auto;
+
+   background: transparent;
+   border-radius: 0;
+   outline: none;
+
+   /* Estado opaco */
+   opacity: 0.82;
+   filter: brightness(0.42) saturate(0.32) contrast(1.12) grayscale(0.1)
+      drop-shadow(0 26px 75px rgba(0, 0, 0, 0.55));
+
+   transition:
+      filter 220ms ease,
+      transform 220ms ease,
+      opacity 220ms ease;
+}
+
+@media (min-width: 1024px) {
+   .footer-img {
+      width: 420px;
+   }
+}
+
+/* Hover: color real */
+.footer-float:hover .footer-img {
+   opacity: 1;
+   transform: translateY(-4px);
+   filter: brightness(0.98) saturate(1.06) contrast(1.02)
+      drop-shadow(0 34px 95px rgba(0, 0, 0, 0.62));
+}
+
+@media (prefers-reduced-motion: reduce) {
+   .footer-float {
+      animation: none;
+   }
+   .footer-img {
+      transition: none;
+   }
+}

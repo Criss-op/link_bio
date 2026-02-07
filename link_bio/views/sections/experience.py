@@ -38,7 +38,7 @@ def experience_section() -> rx.Component:
                         "Coordinación de procesos entre áreas técnicas y administrativas.",
                         "Responsable de la gestión de procesos licitatorios y contratos asociados.",
                         "Seguimiento de hitos, plazos y respaldos para asegurar trazabilidad.",
-                        "Estandarización de documentos, plantillas y checklists para reducir retrabajo.",
+                        "Estandarización de documentos, plantillas y checklists.",
                     ],
                 ),
                 class_name="sr-card",

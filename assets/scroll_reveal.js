@@ -71,6 +71,20 @@
          distance: "0px",
          duration: 650,
       });
+      // 4) Post-it: fade + dispara apertura del .postit interno
+      revealWithOptionalDelay(".sr-postit", {
+         distance: "0px",
+         duration: 650,
+         beforeReveal: (el) => {
+            const note =
+               el.classList && el.classList.contains("postit")
+                  ? el
+                  : el.querySelector && el.querySelector(".postit");
+            if (note && !note.classList.contains("is-open")) {
+               note.classList.add("is-open");
+            }
+         },
+      });
 
       sr.sync();
    };

@@ -1,77 +1,90 @@
 import datetime
 import reflex as rx
-from link_bio.constants import BRAND_NAME, EMAIL_ADDRESS, FULL_NAME, GITHUB_URL, LINKEDIN_URL, TAGLINE
-from link_bio.styles.colors import Color as color
+from link_bio.constants import EMAIL_ADDRESS, GITHUB_URL, LINKEDIN_URL
 from link_bio.styles.colors import TextColor as text_color
-from link_bio.styles.styles import MAX_WIDTH
 
 
 def footer() -> rx.Component:
+    year = datetime.date.today().year
+
     return rx.box(
-        rx.box(class_name="footer-accent"),
-        rx.center(
-            rx.vstack(
-                rx.hstack(
-                    rx.vstack(
-                        rx.text(
-                            f"{BRAND_NAME} ({FULL_NAME})",
-                            color=text_color.HEADER.value,
-                            font_weight="600",
-                        ),
-                        rx.text(TAGLINE, color=text_color.FOOTER.value),
-                        rx.text(
-                            "Built with Reflex • Process / Automation / Strategy",
-                            class_name="footer-microcopy",
-                        ),
-                        spacing="2",
-                        align_items="start",
-                        max_width="360px",
-                    ),
-                    rx.hstack(
-                        rx.vstack(
-                            rx.text("Navegación", color=text_color.HEADER.value, font_weight="600"),
-                            rx.link("Inicio", href="#inicio"),
-                            rx.link("Perfil", href="#perfil"),
-                            rx.link("Experiencia", href="#experiencia"),
-                            rx.link("Formación", href="#formacion"),
-                            rx.link("Habilidades", href="#habilidades"),
-                            spacing="2",
-                            align_items="start",
-                            color=text_color.FOOTER.value,
-                        ),
-                        rx.vstack(
-                            rx.text("Contacto", color=text_color.HEADER.value, font_weight="600"),
-                            rx.text(EMAIL_ADDRESS, color=text_color.FOOTER.value),
-                            rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
-                            rx.link("GitHub", href=GITHUB_URL, is_external=True),
-                            spacing="2",
-                            align_items="start",
-                            color=text_color.FOOTER.value,
-                        ),
-                        spacing="6",
-                        width="100%",
-                        justify="between",
-                        flex_wrap="wrap",
-                    ),
-                    spacing="6",
-                    width="100%",
-                    justify="between",
-                    flex_wrap="wrap",
-                ),
+        # Franja superior (más clara)
+        rx.box(
+            rx.box(
                 rx.text(
-                    f"© {datetime.date.today().year}",
-                    color=text_color.FOOTER.value,
+                    "Cris (Cristóbal Opazo)",
+                    class_name="footer-topbar-name",
                 ),
-                spacing="6",
-                align="start",
-                padding_y="3.5rem",
-                max_width=MAX_WIDTH,
+                class_name="footer-topbar-inner",
+            ),
+            class_name="footer-topbar",
+        ),
+
+        # Contenido inferior
+        rx.box(
+            rx.box(
+                rx.box(
+                    rx.box(
+                        # Izquierda
+                        rx.box(
+                            rx.text(
+                                "Procesos · Automatización · Estrategia · Gestión",
+                                class_name="footer-title",
+                            ),
+                            rx.text(
+                                "Built with Reflex",
+                                class_name="footer-built",
+                            ),
+                                rx.box(
+                                    rx.vstack(
+                                        rx.heading("Navegación", size="2", class_name="footer-col-title"),
+                                        rx.link("Inicio", href="#inicio"),
+                                        rx.link("Perfil", href="#perfil"),
+                                        rx.link("Experiencia", href="#experiencia"),
+                                        rx.link("Formación", href="#formacion"),
+                                        rx.link("Habilidades", href="#habilidades"),
+                                        spacing="2",
+                                        align_items="start",
+                                    ),
+                                    rx.vstack(
+                                        rx.heading("Contacto", size="2", class_name="footer-col-title"),
+                                        rx.link("LinkedIn", href=LINKEDIN_URL, is_external=True),
+                                        rx.link("GitHub", href=GITHUB_URL, is_external=True),
+                                        rx.link("+56 9 79 500 691", href="tel:+56979500691"),
+                                        rx.text(EMAIL_ADDRESS, color=text_color.FOOTER.value),
+                                        spacing="2",
+                                        align_items="start",
+                                    ),
+                                    class_name="footer-links",
+                                ),
+
+                            rx.text(f"© {year}", class_name="footer-bottom"),
+                        ),
+
+                        # Derecha (md+): imagen siempre al lado, nunca abajo
+                        rx.box(
+                            rx.box(
+                                rx.image(
+                                    src="/yo_programador_footer.png",
+                                    alt="Ilustración programador",
+                                    class_name="footer-img",
+                                ),
+                                class_name="footer-float",
+                            ),
+                            class_name="footer-figure",
+                        ),
+
+                        class_name="footer-grid",
+                        width="100%",
+                    ),
+                    class_name="footer-inner",
+                ),
                 width="100%",
             ),
-            width="100%",
+            class_name="footer-main",
         ),
-        border_top=f"1px solid {color.BORDER.value}",
-        background_color=color.SURFACE.value,
-        padding_x="1.5rem",
+
         id="footer",
+        class_name="app-footer",
+        width="100%",
     )
