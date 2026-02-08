@@ -22,6 +22,8 @@ STYLESHEETS = [
     "/cursor_dot.css",
     "/postit.css",
     "/footer.css",
+    "/education_timeline.css",
+
 
 
 ]

@@ -46,6 +46,8 @@ def index() -> rx.Component:
         rx.script(src="/navbar_active.js"),
         rx.script(src="https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js"),
         rx.script(src="/scroll_reveal.js"),
+        rx.script(src="/education_timeline.js"),
+
 
     )
 
