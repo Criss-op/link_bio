@@ -204,13 +204,14 @@ def _desktop_card(item: dict, idx: int) -> rx.Component:
         tab_index=0,
         role="button",
         aria_label=f"Ver detalle: {item['title']}",
-        # data attrs para overlay (JS)
-        data_type=item["type"],
-        data_title=item["title"],
-        data_org=item["org"],
-        data_year=item["year"],
-        data_logo=item["logo"],
-        data_bullets=bullets_json,
+        **{
+            "data-type": item["type"],
+            "data-title": item["title"],
+            "data-org": item["org"],
+            "data-year": item["year"],
+            "data-logo": item["logo"],
+            "data-bullets": bullets_json,
+        },
     )
 
 
@@ -218,8 +219,12 @@ def _mobile_item(item: dict) -> rx.Component:
     return rx.el.details(
         rx.el.summary(
             rx.el.div(
-                rx.el.span(item["type"], class_name="edu-chip"),
-                rx.el.span("▶", class_name="edu-caret"),
+                rx.el.div(
+                    rx.el.span(item["type"], class_name="edu-chip"),
+                    rx.el.span("▶", class_name="edu-caret"),
+                    class_name="edu-m-chiprow",
+                ),
+                rx.el.div(item["title"], class_name="edu-m-summary-title"),
                 class_name="edu-m-summary-left",
             ),
             rx.el.div(
@@ -229,7 +234,6 @@ def _mobile_item(item: dict) -> rx.Component:
             ),
         ),
         rx.el.div(
-            rx.el.div(item["title"], class_name="edu-m-title"),
             rx.el.div(item["org"], class_name="edu-m-org"),
             rx.el.ul(
                 *[rx.el.li(b) for b in item["bullets"][:4]],
@@ -238,6 +242,7 @@ def _mobile_item(item: dict) -> rx.Component:
             class_name="edu-m-body",
         ),
         class_name="edu-m-item",
+            **{"data-type": item["type"]},
     )
 
 
@@ -284,17 +289,21 @@ def education_section() -> rx.Component:
                 class_name="edu-mobile",
             ),
             # DESKTOP
+          rx.el.div(
             rx.el.div(
                 rx.el.div(
-                    rx.el.div(
-                        *[_desktop_card(item, i) for i, item in enumerate(EDUCATION_ITEMS)],
-                        class_name="edu-track",
-                    ),
-                    class_name="edu-viewport",
+                    *[_desktop_card(item, i) for i, item in enumerate(EDUCATION_ITEMS)],
+
+                    # 👇 esto va DESPUÉS del último card
+                    rx.el.div("Continuará ...", class_name="edu-endcap"),
+
+                    class_name="edu-track",
                 ),
-                _overlay(),
-                class_name="edu-desktop",
+                class_name="edu-viewport",
             ),
+            _overlay(),
+            class_name="edu-desktop",
+        ),        
             class_name="edu-shell",
         ),
     )

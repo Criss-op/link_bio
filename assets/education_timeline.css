@@ -23,8 +23,8 @@
    --edu-radius: 18px;
    --edu-card-radius: 16px;
 
-   --edu-card-w-md: 360px;
-   --edu-card-w-lg: 380px;
+   --edu-card-w-md: 320px;
+   --edu-card-w-lg: 320px;
 
    --edu-stagger: 76px; /* alternancia arriba/abajo */
 }
@@ -39,17 +39,26 @@
    overflow: hidden;
 }
 
-/* ancho fijo por breakpoint (md / lg) y centrado */
+/* ancho RESPONSIVE + “gutter” seguro */
+.edu-shell {
+   width: 100%;
+   max-width: 100%;
+   margin-left: auto;
+   margin-right: auto;
+   box-sizing: border-box;
+}
+
 @media (min-width: 768px) {
    .edu-shell {
-      width: 720px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: min(900px, 100%);
+      padding-left: 0;
+      padding-right: 0;
    }
 }
+
 @media (min-width: 1024px) {
    .edu-shell {
-      width: 1100px;
+      max-width: min(1100px, 100%);
    }
 }
 
@@ -114,8 +123,11 @@
    display: flex;
    align-items: center;
    gap: 22px;
-   padding: 26px 22px;
-   min-height: 460px; /* da espacio para alternancia */
+   padding: 32px 22px;
+   min-height: 560px; /* +20% aprox para posicionar mejor */
+
+   width: max-content; /* clave: el track se expande al contenido */
+   min-width: 100%; /* pero nunca menos que el viewport */
 }
 
 /* línea central horizontal (la “timeline”) */
@@ -127,8 +139,16 @@
    top: 50%;
    height: 2px;
    transform: translateY(-50%);
-   background: linear-gradient(90deg, transparent, var(--edu-line), transparent);
    pointer-events: none;
+
+   /* Antes: transparent, line, transparent (solo fuerte al centro) */
+   background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--edu-line) 8%,
+      var(--edu-line) 92%,
+      transparent 100%
+   );
 }
 
 /* =========
@@ -137,15 +157,16 @@
 
 .edu-card {
    width: var(--edu-card-w-md);
-   min-height: 122px;
+   min-height: 150px;
    position: relative;
    border-radius: var(--edu-card-radius);
-   padding: 14px 14px 12px;
+   padding: 14px 72px 12px 14px;
    background: var(--edu-card);
    border: 1px solid var(--edu-border);
    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
    cursor: pointer;
    user-select: none;
+   flex: 0 0 auto; /* clave: evita shrink */
 
    /* contrato para hover sin romper alternancia */
    --edu-y: 0px;
@@ -157,9 +178,70 @@
       background 160ms ease;
 }
 
-@media (min-width: 1024px) {
-   .edu-card {
-      width: var(--edu-card-w-lg);
+/* Overlay base para tintado por tipo */
+.edu-card::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   pointer-events: none;
+   opacity: 0.08; /* intensidad del color */
+   background: transparent;
+   transition: opacity 160ms ease;
+}
+
+/* Titulación → rojo suave */
+.edu-card[data-type*="Titul"]::after,
+.edu-card[data-type*="TITUL"]::after {
+   background: rgba(255, 90, 90, 1);
+}
+
+/* Diplomado → amarillo suave */
+.edu-card[data-type*="Diplom"]::after,
+.edu-card[data-type*="DIPLOM"]::after {
+   background: rgba(255, 210, 80, 1);
+}
+
+/* Hover: un poco más visible */
+.edu-card:hover::after {
+   opacity: 0.12;
+}
+
+/* Texto final después del último hito (desktop) */
+.edu-endcap {
+   flex: 0 0 auto;
+   align-self: center;
+   margin-left: 18px;
+
+   padding: 8px 12px;
+   border-radius: 999px;
+
+   font-size: 13px;
+   letter-spacing: 0.02em;
+   font-style: italic;
+   color: rgba(255, 255, 255, 0.78);
+
+   /* esto es lo que tapa la línea */
+   background: rgba(8, 12, 12, 0.92);
+   border: 1px solid rgba(100, 255, 218, 0.22);
+
+   user-select: none;
+   pointer-events: none;
+   white-space: nowrap;
+
+   opacity: 0.92;
+   animation: edu-continue-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes edu-continue-pulse {
+   0%,
+   100% {
+      opacity: 0.7;
+      transform: translateY(0);
+   }
+   50% {
+      opacity: 1;
+      transform: translateY(-4px);
    }
 }
 
@@ -223,6 +305,18 @@
    top: -32px;
 }
 
+/* --- Alineación dinámica a la línea central (JS) --- */
+.edu-track.edu-has-dyn .edu-card::before {
+   top: var(--edu-connector-top);
+   bottom: auto;
+   height: var(--edu-connector-h);
+}
+
+.edu-track.edu-has-dyn .edu-card::after {
+   top: var(--edu-node-top);
+   bottom: auto;
+}
+
 /* contenido interno card */
 .edu-chip {
    display: inline-flex;
@@ -236,12 +330,43 @@
    background: rgba(100, 255, 218, 0.1);
    border: 1px solid rgba(100, 255, 218, 0.2);
 }
+/* Variantes por tipo (md/lg) */
+.edu-card[data-type*="Titul"] .edu-chip,
+.edu-card[data-type*="TITUL"] .edu-chip {
+   background: rgba(255, 90, 90, 0.1);
+   border-color: rgba(255, 90, 90, 0.26);
+}
+
+.edu-card[data-type*="Diplom"] .edu-chip,
+.edu-card[data-type*="DIPLOM"] .edu-chip {
+   background: rgba(255, 210, 80, 0.1);
+   border-color: rgba(255, 210, 80, 0.26);
+}
+/* Variantes por tipo (mobile initial) */
+.edu-m-item[data-type*="Titul"] .edu-chip,
+.edu-m-item[data-type*="TITUL"] .edu-chip {
+   background: rgba(255, 90, 90, 0.1);
+   border-color: rgba(255, 90, 90, 0.26);
+}
+
+.edu-m-item[data-type*="Diplom"] .edu-chip,
+.edu-m-item[data-type*="DIPLOM"] .edu-chip {
+   background: rgba(255, 210, 80, 0.1);
+   border-color: rgba(255, 210, 80, 0.26);
+}
+
+/* (opcional) Curso mantiene el cian por defecto, no necesitas regla */
 
 .edu-title {
    margin-top: 10px;
    font-size: 15px;
    font-weight: 650;
    line-height: 1.25;
+
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 3;
+   overflow: hidden;
 }
 
 .edu-org {
@@ -249,6 +374,11 @@
    font-size: 13px;
    color: var(--edu-text-dim);
    line-height: 1.25;
+
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;
+   overflow: hidden;
 }
 
 .edu-year {
@@ -381,6 +511,8 @@
    border-radius: calc(var(--edu-radius) - 6px);
    background: var(--edu-bg);
    border: 1px solid rgba(255, 255, 255, 0.06);
+   --edu-m-dot-top: 18px; /* mismo top que usa el nodo */
+   --edu-m-dot-size: 12px; /* mismo tamaño del nodo */
    padding: 12px 12px 12px 22px; /* deja espacio a la línea */
 }
 
@@ -388,8 +520,8 @@
    content: "";
    position: absolute;
    left: 14px;
-   top: 14px;
-   bottom: 14px;
+   top: var(--edu-m-line-top, 14px);
+   bottom: var(--edu-m-line-bottom, 14px);
    width: 2px;
    background: rgba(100, 255, 218, 0.24);
 }
@@ -400,21 +532,7 @@
    border-radius: var(--edu-card-radius);
    background: rgba(0, 0, 0, 0.3);
    border: 1px solid rgba(100, 255, 218, 0.14);
-   overflow: hidden;
-}
-
-/* nodo sobre la línea izquierda */
-.edu-m-item::before {
-   content: "";
-   position: absolute;
-   left: -14px;
-   top: 18px;
-   width: 12px;
-   height: 12px;
-   border-radius: 999px;
-   border: 2px solid rgba(100, 255, 218, 0.7);
-   background: rgba(0, 0, 0, 0.55);
-   box-shadow: 0 0 0 6px rgba(100, 255, 218, 0.06);
+   overflow: visible;
 }
 
 .edu-m-item summary {
@@ -429,11 +547,45 @@
 .edu-m-item summary::-webkit-details-marker {
    display: none;
 }
+/* Nodo + conector correctamente alineados a la línea (mobile) */
+.edu-m-item summary {
+   position: relative;
+}
+
+/* nodo (pelotita) centrado respecto al summary */
+.edu-m-item summary::before {
+   content: "";
+   position: absolute;
+   left: -8px; /* línea está en 14px y el contenido empieza en 22px => 14-22 = -8 */
+   top: 50%;
+   transform: translate(-50%, -50%);
+   width: 12px;
+   height: 12px;
+   border-radius: 999px;
+   border: 2px solid rgba(100, 255, 218, 0.7);
+   background: rgba(0, 0, 0, 0.55);
+   box-shadow: 0 0 0 6px rgba(100, 255, 218, 0.06);
+   pointer-events: none;
+}
+
+/* conector horizontal desde la línea hacia el borde de la card */
+.edu-m-item summary::after {
+   content: "";
+   position: absolute;
+   left: -8px; /* mismo anclaje del nodo */
+   top: 50%;
+   transform: translateY(-50%);
+   width: 14px; /* conecta hacia la card */
+   height: 2px;
+   background: rgba(100, 255, 218, 0.28);
+   pointer-events: none;
+}
 
 .edu-m-summary-left {
-   display: inline-flex;
-   align-items: center;
-   gap: 10px;
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 6px;
    min-width: 0;
 }
 
@@ -446,6 +598,22 @@
 .edu-m-item[open] .edu-caret {
    transform: rotate(90deg);
    color: rgba(255, 255, 255, 0.86);
+}
+
+.edu-m-chiprow {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.edu-m-summary-title {
+   font-size: 13.5px;
+   font-weight: 650;
+   line-height: 1.25;
+   color: rgba(255, 255, 255, 0.9);
+   white-space: normal;
+   overflow-wrap: anywhere;
+   max-width: 100%;
 }
 
 .edu-m-summary-right {
@@ -488,11 +656,67 @@
 .edu-m-ul {
    margin-top: 10px;
    padding-left: 18px;
+
+   list-style: disc; /* fuerza marker */
+   list-style-position: outside;
 }
+
 .edu-m-ul li {
    margin: 7px 0;
    color: rgba(255, 255, 255, 0.86);
+
+   display: list-item; /* por si algún reset lo deja en flex/block raro */
 }
+
 .edu-m-ul li::marker {
    color: rgba(100, 255, 218, 0.7);
+}
+/* ===== Tint por tipo: borde + fondo sutil (md/lg) ===== */
+
+/* Base: asegura que el fondo pueda tener overlay sin romper nada */
+.edu-card {
+   background-color: var(--edu-card);
+   background-image: none;
+}
+
+/* TITULACIÓN (rojo suave) */
+.edu-card[data-type*="Titul"],
+.edu-card[data-type*="TITUL"] {
+   border-color: rgba(255, 90, 90, 0.26);
+   background-image: linear-gradient(180deg, rgba(255, 90, 90, 0.1), rgba(255, 90, 90, 0.03));
+}
+
+/* DIPLOMADO (amarillo suave) */
+.edu-card[data-type*="Diplom"],
+.edu-card[data-type*="DIPLOM"] {
+   border-color: rgba(255, 210, 80, 0.24);
+   background-image: linear-gradient(180deg, rgba(255, 210, 80, 0.1), rgba(255, 210, 80, 0.03));
+}
+
+/* Hover: que no vuelva al cian */
+.edu-card[data-type*="Titul"]:hover,
+.edu-card[data-type*="TITUL"]:hover {
+   border-color: rgba(255, 90, 90, 0.36);
+}
+
+.edu-card[data-type*="Diplom"]:hover,
+.edu-card[data-type*="DIPLOM"]:hover {
+   border-color: rgba(255, 210, 80, 0.34);
+}
+/* ===== Tint por tipo: mobile initial ===== */
+.edu-m-item {
+   background-color: rgba(0, 0, 0, 0.3);
+   background-image: none;
+}
+
+.edu-m-item[data-type*="Titul"],
+.edu-m-item[data-type*="TITUL"] {
+   border-color: rgba(255, 90, 90, 0.22);
+   background-image: linear-gradient(180deg, rgba(255, 90, 90, 0.08), rgba(255, 90, 90, 0.02));
+}
+
+.edu-m-item[data-type*="Diplom"],
+.edu-m-item[data-type*="DIPLOM"] {
+   border-color: rgba(255, 210, 80, 0.2);
+   background-image: linear-gradient(180deg, rgba(255, 210, 80, 0.08), rgba(255, 210, 80, 0.02));
 }
