@@ -1,0 +1,498 @@
+/* ==========================
+   Education timeline module
+   Contract:
+   - Mobile (initial): <details> vertical con línea izquierda.
+   - Desktop (md+): carrusel horizontal con línea central y cards alternadas.
+   - Overlay: #edu-overlay (JS lo controla).
+   ========================== */
+
+:root {
+   --edu-accent: rgba(100, 255, 218, 0.85);
+   --edu-accent-soft: rgba(100, 255, 218, 0.18);
+   --edu-line: rgba(100, 255, 218, 0.3);
+
+   --edu-bg: rgba(8, 12, 12, 0.55);
+   --edu-panel: rgba(10, 14, 14, 0.72);
+   --edu-card: rgba(0, 0, 0, 0.34);
+
+   --edu-border: rgba(100, 255, 218, 0.16);
+   --edu-border-strong: rgba(100, 255, 218, 0.28);
+
+   --edu-text-dim: rgba(255, 255, 255, 0.72);
+
+   --edu-radius: 18px;
+   --edu-card-radius: 16px;
+
+   --edu-card-w-md: 360px;
+   --edu-card-w-lg: 380px;
+
+   --edu-stagger: 76px; /* alternancia arriba/abajo */
+}
+
+/* wrapper general del módulo */
+.edu-shell {
+   width: 100%;
+   border-radius: var(--edu-radius);
+   background: linear-gradient(180deg, rgba(10, 14, 14, 0.55), rgba(0, 0, 0, 0.35));
+   border: 1px solid var(--edu-border);
+   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+   overflow: hidden;
+}
+
+/* ancho fijo por breakpoint (md / lg) y centrado */
+@media (min-width: 768px) {
+   .edu-shell {
+      width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+   }
+}
+@media (min-width: 1024px) {
+   .edu-shell {
+      width: 1100px;
+   }
+}
+
+/* ==========
+   VISIBILIDAD
+   ========== */
+.edu-mobile {
+   display: block;
+}
+.edu-desktop {
+   display: none;
+}
+
+@media (min-width: 768px) {
+   .edu-mobile {
+      display: none;
+   }
+   .edu-desktop {
+      display: block;
+   }
+}
+
+/* ======================
+   DESKTOP (md y lg): track
+   ====================== */
+
+.edu-desktop {
+   position: relative;
+   padding: 18px 18px 14px;
+   background: radial-gradient(circle at 10% 0%, rgba(100, 255, 218, 0.08), transparent 45%);
+}
+
+.edu-viewport {
+   position: relative;
+   overflow-x: auto;
+   overflow-y: hidden;
+   -webkit-overflow-scrolling: touch;
+   scroll-behavior: smooth;
+   border-radius: calc(var(--edu-radius) - 6px);
+   background: var(--edu-bg);
+   border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* scrollbar (suave, no invasivo) */
+.edu-viewport::-webkit-scrollbar {
+   height: 10px;
+}
+.edu-viewport::-webkit-scrollbar-track {
+   background: rgba(255, 255, 255, 0.04);
+   border-radius: 999px;
+}
+.edu-viewport::-webkit-scrollbar-thumb {
+   background: rgba(100, 255, 218, 0.22);
+   border-radius: 999px;
+}
+.edu-viewport:hover::-webkit-scrollbar-thumb {
+   background: rgba(100, 255, 218, 0.32);
+}
+
+.edu-track {
+   position: relative;
+   display: flex;
+   align-items: center;
+   gap: 22px;
+   padding: 26px 22px;
+   min-height: 460px; /* da espacio para alternancia */
+}
+
+/* línea central horizontal (la “timeline”) */
+.edu-track::before {
+   content: "";
+   position: absolute;
+   left: 22px;
+   right: 22px;
+   top: 50%;
+   height: 2px;
+   transform: translateY(-50%);
+   background: linear-gradient(90deg, transparent, var(--edu-line), transparent);
+   pointer-events: none;
+}
+
+/* =========
+   CARDS
+   ========= */
+
+.edu-card {
+   width: var(--edu-card-w-md);
+   min-height: 122px;
+   position: relative;
+   border-radius: var(--edu-card-radius);
+   padding: 14px 14px 12px;
+   background: var(--edu-card);
+   border: 1px solid var(--edu-border);
+   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+   cursor: pointer;
+   user-select: none;
+
+   /* contrato para hover sin romper alternancia */
+   --edu-y: 0px;
+   transform: translateY(var(--edu-y));
+   transition:
+      transform 160ms ease,
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      background 160ms ease;
+}
+
+@media (min-width: 1024px) {
+   .edu-card {
+      width: var(--edu-card-w-lg);
+   }
+}
+
+.edu-card:focus-visible {
+   outline: 2px solid rgba(100, 255, 218, 0.55);
+   outline-offset: 4px;
+}
+
+/* alternancia */
+.edu-card--top {
+   --edu-y: calc(var(--edu-stagger) * -1);
+}
+.edu-card--bottom {
+   --edu-y: var(--edu-stagger);
+}
+
+.edu-card--top:hover {
+   transform: translateY(calc(var(--edu-y) - 6px));
+   border-color: var(--edu-border-strong);
+   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+}
+.edu-card--bottom:hover {
+   transform: translateY(calc(var(--edu-y) + 6px));
+   border-color: var(--edu-border-strong);
+   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+}
+
+/* conector y nodo hacia la línea central */
+.edu-card::before {
+   content: "";
+   position: absolute;
+   left: 22px;
+   width: 2px;
+   height: 24px;
+   background: rgba(100, 255, 218, 0.28);
+}
+
+.edu-card::after {
+   content: "";
+   position: absolute;
+   left: 17px;
+   width: 12px;
+   height: 12px;
+   border-radius: 999px;
+   border: 2px solid rgba(100, 255, 218, 0.7);
+   background: rgba(0, 0, 0, 0.55);
+   box-shadow: 0 0 0 6px rgba(100, 255, 218, 0.06);
+}
+
+.edu-card--top::before {
+   bottom: -24px;
+}
+.edu-card--top::after {
+   bottom: -32px;
+}
+
+.edu-card--bottom::before {
+   top: -24px;
+}
+.edu-card--bottom::after {
+   top: -32px;
+}
+
+/* contenido interno card */
+.edu-chip {
+   display: inline-flex;
+   align-items: center;
+   gap: 8px;
+   padding: 5px 10px;
+   border-radius: 999px;
+   font-size: 12px;
+   font-weight: 600;
+   color: rgba(255, 255, 255, 0.86);
+   background: rgba(100, 255, 218, 0.1);
+   border: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.edu-title {
+   margin-top: 10px;
+   font-size: 15px;
+   font-weight: 650;
+   line-height: 1.25;
+}
+
+.edu-org {
+   margin-top: 6px;
+   font-size: 13px;
+   color: var(--edu-text-dim);
+   line-height: 1.25;
+}
+
+.edu-year {
+   margin-top: 6px;
+   font-size: 12px;
+   letter-spacing: 0.02em;
+   color: rgba(255, 255, 255, 0.78);
+}
+
+/* logo dentro de card */
+.edu-logo {
+   position: absolute;
+   top: 12px;
+   right: 12px;
+   width: 44px;
+   height: 44px;
+   object-fit: contain;
+   opacity: 0.92; /* NO oscuro */
+   filter: none; /* NO gris */
+   transform: translateZ(0);
+}
+.edu-card:hover .edu-logo {
+   opacity: 1;
+}
+
+/* ======================
+   OVERLAY (detalle md/lg)
+   ====================== */
+
+#edu-overlay {
+   position: fixed;
+   inset: 0;
+   display: none;
+   align-items: center;
+   justify-content: center;
+   padding: 18px;
+   background: rgba(0, 0, 0, 0.62);
+   z-index: 9999;
+}
+
+#edu-overlay.is-open {
+   display: flex;
+}
+
+.edu-overlay__panel {
+   width: min(760px, 100%);
+   border-radius: var(--edu-radius);
+   background: rgba(10, 14, 14, 0.86);
+   border: 1px solid rgba(100, 255, 218, 0.22);
+   box-shadow: 0 20px 70px rgba(0, 0, 0, 0.55);
+   padding: 16px 16px 14px;
+   position: relative;
+}
+
+.edu-overlay__close {
+   position: absolute;
+   top: 10px;
+   right: 10px;
+   width: 36px;
+   height: 36px;
+   border-radius: 999px;
+   border: 1px solid rgba(255, 255, 255, 0.14);
+   background: rgba(0, 0, 0, 0.25);
+   color: rgba(255, 255, 255, 0.88);
+   cursor: pointer;
+}
+
+.edu-overlay__top {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   padding-right: 44px; /* espacio para el botón */
+}
+
+.edu-overlay__logo {
+   width: 46px;
+   height: 46px;
+   object-fit: contain;
+   opacity: 0.95;
+}
+
+.edu-overlay__meta {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+}
+
+.edu-overlay__title {
+   margin-top: 10px;
+   font-size: 18px;
+   font-weight: 700;
+   line-height: 1.25;
+}
+
+.edu-overlay__org {
+   margin-top: 6px;
+   font-size: 14px;
+   color: var(--edu-text-dim);
+}
+
+.edu-overlay__year {
+   margin-top: 6px;
+   font-size: 12px;
+   color: rgba(255, 255, 255, 0.78);
+}
+
+.edu-bullets {
+   margin-top: 12px;
+   padding-left: 18px;
+}
+.edu-bullets li {
+   margin: 8px 0;
+   color: rgba(255, 255, 255, 0.86);
+}
+.edu-bullets li::marker {
+   color: rgba(100, 255, 218, 0.7);
+}
+
+/* ======================
+   MOBILE (initial): vertical
+   ====================== */
+
+.edu-mobile {
+   padding: 16px 16px 14px;
+   background: radial-gradient(circle at 10% 0%, rgba(100, 255, 218, 0.08), transparent 45%);
+}
+
+.edu-mobile-list {
+   position: relative;
+   border-radius: calc(var(--edu-radius) - 6px);
+   background: var(--edu-bg);
+   border: 1px solid rgba(255, 255, 255, 0.06);
+   padding: 12px 12px 12px 22px; /* deja espacio a la línea */
+}
+
+.edu-mobile-list::before {
+   content: "";
+   position: absolute;
+   left: 14px;
+   top: 14px;
+   bottom: 14px;
+   width: 2px;
+   background: rgba(100, 255, 218, 0.24);
+}
+
+.edu-m-item {
+   position: relative;
+   margin: 10px 0;
+   border-radius: var(--edu-card-radius);
+   background: rgba(0, 0, 0, 0.3);
+   border: 1px solid rgba(100, 255, 218, 0.14);
+   overflow: hidden;
+}
+
+/* nodo sobre la línea izquierda */
+.edu-m-item::before {
+   content: "";
+   position: absolute;
+   left: -14px;
+   top: 18px;
+   width: 12px;
+   height: 12px;
+   border-radius: 999px;
+   border: 2px solid rgba(100, 255, 218, 0.7);
+   background: rgba(0, 0, 0, 0.55);
+   box-shadow: 0 0 0 6px rgba(100, 255, 218, 0.06);
+}
+
+.edu-m-item summary {
+   list-style: none;
+   cursor: pointer;
+   padding: 12px 12px 10px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+}
+.edu-m-item summary::-webkit-details-marker {
+   display: none;
+}
+
+.edu-m-summary-left {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+   min-width: 0;
+}
+
+.edu-caret {
+   font-size: 14px;
+   color: rgba(255, 255, 255, 0.75);
+   transform: rotate(0deg);
+   transition: transform 140ms ease;
+}
+.edu-m-item[open] .edu-caret {
+   transform: rotate(90deg);
+   color: rgba(255, 255, 255, 0.86);
+}
+
+.edu-m-summary-right {
+   display: inline-flex;
+   align-items: center;
+   gap: 10px;
+   flex-shrink: 0;
+}
+
+.edu-m-logo {
+   width: 34px;
+   height: 34px;
+   object-fit: contain;
+   opacity: 0.92;
+   filter: none;
+}
+
+.edu-m-body {
+   padding: 0 12px 12px;
+}
+
+.edu-m-title {
+   margin-top: 4px;
+   font-size: 14px;
+   font-weight: 700;
+   line-height: 1.25;
+}
+
+.edu-m-org {
+   margin-top: 6px;
+   font-size: 13px;
+   color: var(--edu-text-dim);
+}
+
+.edu-m-year {
+   font-size: 12px;
+   color: rgba(255, 255, 255, 0.78);
+}
+
+.edu-m-ul {
+   margin-top: 10px;
+   padding-left: 18px;
+}
+.edu-m-ul li {
+   margin: 7px 0;
+   color: rgba(255, 255, 255, 0.86);
+}
+.edu-m-ul li::marker {
+   color: rgba(100, 255, 218, 0.7);
+}
