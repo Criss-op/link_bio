@@ -23,6 +23,7 @@ STYLESHEETS = [
     "/postit.css",
     "/footer.css",
     "/education_timeline.css",
+    "/preloader.css",
 
 
 

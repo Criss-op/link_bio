@@ -229,6 +229,7 @@ def hero_section() -> rx.Component:
                     rx.box(
                         rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
                         rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
+                        rx.image(src="/icons_skills/vba.png", class_name="skills-icon", alt="vba"),
                         rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
                         rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),
@@ -250,6 +251,7 @@ def hero_section() -> rx.Component:
                     rx.box(
                         rx.image(src="/icons_skills/asana.png", class_name="skills-icon", alt="Asana"),
                         rx.image(src="/icons_skills/excel.png", class_name="skills-icon", alt="Excel"),
+                        rx.image(src="/icons_skills/vba.png", class_name="skills-icon", alt="vba"),
                         rx.image(src="/icons_skills/lean.png", class_name="skills-icon", alt="Lean"),
                         rx.image(src="/icons_skills/justintime.png", class_name="skills-icon", alt="Just in Time"),
                         rx.image(src="/icons_skills/kanban.png", class_name="skills-icon", alt="Kanban"),

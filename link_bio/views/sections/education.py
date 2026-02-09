@@ -1,5 +1,7 @@
 import json
 import reflex as rx
+import urllib.parse
+
 
 from link_bio.components.section import section_container, section_header
 
@@ -193,6 +195,7 @@ EDUCATION_ITEMS = [
 def _desktop_card(item: dict, idx: int) -> rx.Component:
     pos_class = "edu-card--top" if idx % 2 == 0 else "edu-card--bottom"
     bullets_json = json.dumps(item["bullets"], ensure_ascii=False)
+    bullets_payload = urllib.parse.quote(bullets_json, safe="")
 
     return rx.el.div(
         rx.el.div(item["type"], class_name="edu-chip"),
@@ -210,7 +213,7 @@ def _desktop_card(item: dict, idx: int) -> rx.Component:
             "data-org": item["org"],
             "data-year": item["year"],
             "data-logo": item["logo"],
-            "data-bullets": bullets_json,
+            "data-bullets": bullets_payload,
         },
     )
 
@@ -250,23 +253,46 @@ def _overlay() -> rx.Component:
     # Nota: sin “click para ver detalle”. El contrato es: click en card => overlay.
     return rx.el.div(
         rx.el.div(
-            rx.el.button("×", id="edu-overlay-close", class_name="edu-overlay__close", type="button"),
+            rx.el.button(
+                "✕",
+                id="edu-overlay-close",
+                class_name="edu-overlay__close",
+                type="button",
+                aria_label="Cerrar",
+            ),
+
+            # Header: [tipo] [título] .......... [año] [logo]
             rx.el.div(
-                rx.el.img(id="edu-o-logo", class_name="edu-overlay__logo", alt="Logo"),
                 rx.el.div(
                     rx.el.div(id="edu-o-type", class_name="edu-chip"),
-                    rx.el.div(id="edu-o-year", class_name="edu-overlay__year"),
-                    class_name="edu-overlay__meta",
+                    rx.el.div(id="edu-o-title", class_name="edu-overlay__title"),
+                    class_name="edu-overlay__left",
                 ),
-                class_name="edu-overlay__top",
+                rx.el.div(
+                    rx.el.img(id="edu-o-logo", class_name="edu-overlay__logo", alt="Logo"),
+                    class_name="edu-overlay__right",
+                ),
+
+                class_name="edu-overlay__header",
+                
             ),
-            rx.el.div(id="edu-o-title", class_name="edu-overlay__title"),
+            
+
+
+            # Segunda línea: institución
             rx.el.div(id="edu-o-org", class_name="edu-overlay__org"),
+
+            # Bullets
             rx.el.ul(id="edu-o-bullets", class_name="edu-bullets"),
+            rx.el.div(id="edu-o-year", class_name="edu-overlay__year edu-overlay__year--corner"),
+
             class_name="edu-overlay__panel",
+            
         ),
+
         id="edu-overlay",
     )
+
 
 
 def education_section() -> rx.Component:
@@ -276,8 +302,8 @@ def education_section() -> rx.Component:
         rx.el.link(rel="stylesheet", href="/education_timeline.css"),
         rx.script(src="/education_timeline.js"),
         section_header(
-            "Evolución profesional",
-            "De la base técnica a la toma de decisiones",
+            "Formación",
+            "Aprendizaje autodidacta continuo en paralelo.",
         ),
         rx.el.div(
             # MOBILE

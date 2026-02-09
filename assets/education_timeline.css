@@ -291,6 +291,30 @@
    box-shadow: 0 0 0 6px rgba(100, 255, 218, 0.06);
 }
 
+/* ===== Tint conector+nodo por tipo (DESKTOP) ===== */
+
+/* Titulación -> rojo suave */
+.edu-card[data-type*="Titul"]::before,
+.edu-card[data-type*="TITUL"]::before {
+   background: rgba(255, 90, 90, 0.28);
+}
+.edu-card[data-type*="Titul"]::after,
+.edu-card[data-type*="TITUL"]::after {
+   border-color: rgba(255, 90, 90, 0.72);
+   box-shadow: 0 0 0 6px rgba(255, 90, 90, 0.07);
+}
+
+/* Diplomado -> amarillo suave */
+.edu-card[data-type*="Diplom"]::before,
+.edu-card[data-type*="DIPLOM"]::before {
+   background: rgba(255, 210, 80, 0.28);
+}
+.edu-card[data-type*="Diplom"]::after,
+.edu-card[data-type*="DIPLOM"]::after {
+   border-color: rgba(255, 210, 80, 0.72);
+   box-shadow: 0 0 0 6px rgba(255, 210, 80, 0.07);
+}
+
 .edu-card--top::before {
    bottom: -24px;
 }
@@ -384,6 +408,7 @@
 .edu-year {
    margin-top: 6px;
    font-size: 12px;
+   font-weight: 700;
    letter-spacing: 0.02em;
    color: rgba(255, 255, 255, 0.78);
 }
@@ -393,8 +418,8 @@
    position: absolute;
    top: 12px;
    right: 12px;
-   width: 44px;
-   height: 44px;
+   width: 60px;
+   height: 60px;
    object-fit: contain;
    opacity: 0.92; /* NO oscuro */
    filter: none; /* NO gris */
@@ -415,8 +440,9 @@
    align-items: center;
    justify-content: center;
    padding: 18px;
-   background: rgba(0, 0, 0, 0.62);
-   z-index: 9999;
+   background: rgba(0, 0, 0, 0.82);
+   z-index: 2000;
+   backdrop-filter: blur(2px);
 }
 
 #edu-overlay.is-open {
@@ -432,6 +458,23 @@
    padding: 16px 16px 14px;
    position: relative;
 }
+/* Forzar color de texto dentro del modal */
+#edu-overlay .edu-overlay__panel {
+   color: rgba(255, 255, 255, 0.88);
+}
+
+#edu-overlay .edu-overlay__title {
+   color: rgba(255, 255, 255, 0.92);
+}
+
+#edu-overlay .edu-overlay__org {
+   color: rgba(255, 255, 255, 0.72);
+}
+#edu-overlay .edu-chip {
+   display: inline-flex;
+   align-items: center;
+   height: 24px; /* ajusta 22–26 si quieres */
+}
 
 .edu-overlay__close {
    position: absolute;
@@ -444,45 +487,113 @@
    background: rgba(0, 0, 0, 0.25);
    color: rgba(255, 255, 255, 0.88);
    cursor: pointer;
+   display: grid;
+   place-items: center;
+   font-size: 16px;
+   line-height: 1;
+   transition:
+      transform 140ms ease,
+      background 140ms ease,
+      border-color 140ms ease;
 }
 
-.edu-overlay__top {
+.edu-overlay__close:hover {
+   background: rgba(255, 255, 255, 0.1);
+   border-color: rgba(255, 255, 255, 0.22);
+   transform: rotate(90deg);
+}
+
+.edu-overlay__close:focus-visible {
+   outline: 2px solid rgba(100, 255, 218, 0.55);
+   outline-offset: 2px;
+}
+
+/* Header nuevo: [chip + título] .... [año + logo] */
+.edu-overlay__header {
    display: flex;
    align-items: center;
-   gap: 10px;
+   justify-content: space-between;
+   gap: 12px;
    padding-right: 44px; /* espacio para el botón */
 }
 
+.edu-overlay__left {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   min-width: 0;
+   flex: 1;
+}
+
+.edu-overlay__title {
+   margin: 0;
+   font-size: 18px;
+   font-weight: 700;
+   line-height: 1.22;
+   min-width: 0;
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;
+   overflow: hidden;
+}
+
+.edu-overlay__right {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   flex: 0 0 auto;
+}
+
+.edu-overlay__year {
+   margin: 0;
+   font-size: 15px;
+   color: rgba(255, 255, 255, 0.78);
+   white-space: nowrap;
+   font-weight: 700;
+}
+.edu-overlay__year--corner {
+   position: absolute;
+   right: 14px;
+   bottom: 12px;
+   font-weight: 700;
+   color: rgba(255, 255, 255, 0.72);
+   white-space: nowrap;
+}
+
 .edu-overlay__logo {
-   width: 46px;
-   height: 46px;
+   width: 130px;
+   height: 130px;
    object-fit: contain;
    opacity: 0.95;
 }
 
-.edu-overlay__meta {
-   display: flex;
-   flex-direction: column;
-   gap: 4px;
+/* Variantes por tipo dentro del MODAL (requiere data-type en .edu-overlay__panel) */
+.edu-overlay__panel[data-type*="Titul"],
+.edu-overlay__panel[data-type*="TITUL"] {
+   border-color: rgba(255, 90, 90, 0.22);
+}
+.edu-overlay__panel[data-type*="Titul"] .edu-chip,
+.edu-overlay__panel[data-type*="TITUL"] .edu-chip {
+   background: rgba(255, 90, 90, 0.1);
+   border-color: rgba(255, 90, 90, 0.26);
+}
+.edu-overlay__panel[data-type*="Titul"] .edu-bullets li::marker,
+.edu-overlay__panel[data-type*="TITUL"] .edu-bullets li::marker {
+   color: rgba(255, 90, 90, 0.72);
 }
 
-.edu-overlay__title {
-   margin-top: 10px;
-   font-size: 18px;
-   font-weight: 700;
-   line-height: 1.25;
+.edu-overlay__panel[data-type*="Diplom"],
+.edu-overlay__panel[data-type*="DIPLOM"] {
+   border-color: rgba(255, 210, 80, 0.22);
 }
-
-.edu-overlay__org {
-   margin-top: 6px;
-   font-size: 14px;
-   color: var(--edu-text-dim);
+.edu-overlay__panel[data-type*="Diplom"] .edu-chip,
+.edu-overlay__panel[data-type*="DIPLOM"] .edu-chip {
+   background: rgba(255, 210, 80, 0.1);
+   border-color: rgba(255, 210, 80, 0.26);
 }
-
-.edu-overlay__year {
-   margin-top: 6px;
-   font-size: 12px;
-   color: rgba(255, 255, 255, 0.78);
+.edu-overlay__panel[data-type*="Diplom"] .edu-bullets li::marker,
+.edu-overlay__panel[data-type*="DIPLOM"] .edu-bullets li::marker {
+   color: rgba(255, 210, 80, 0.72);
 }
 
 .edu-bullets {
@@ -495,6 +606,24 @@
 }
 .edu-bullets li::marker {
    color: rgba(100, 255, 218, 0.7);
+}
+
+#edu-overlay .edu-bullets {
+   list-style: disc;
+}
+#edu-overlay .edu-bullets li {
+   display: list-item;
+}
+
+/* Tint viñetas por tipo (DESKTOP) */
+.edu-card[data-type*="Titul"] .edu-bullets li::marker,
+.edu-card[data-type*="TITUL"] .edu-bullets li::marker {
+   color: rgba(255, 90, 90, 0.72);
+}
+
+.edu-card[data-type*="Diplom"] .edu-bullets li::marker,
+.edu-card[data-type*="DIPLOM"] .edu-bullets li::marker {
+   color: rgba(255, 210, 80, 0.72);
 }
 
 /* ======================
@@ -624,8 +753,8 @@
 }
 
 .edu-m-logo {
-   width: 34px;
-   height: 34px;
+   width: 45px;
+   height: 45px;
    object-fit: contain;
    opacity: 0.92;
    filter: none;
@@ -650,6 +779,7 @@
 
 .edu-m-year {
    font-size: 12px;
+   font-weight: 700;
    color: rgba(255, 255, 255, 0.78);
 }
 
@@ -671,6 +801,17 @@
 .edu-m-ul li::marker {
    color: rgba(100, 255, 218, 0.7);
 }
+/* Tint viñetas por tipo (MOBILE) */
+.edu-m-item[data-type*="Titul"] .edu-m-ul li::marker,
+.edu-m-item[data-type*="TITUL"] .edu-m-ul li::marker {
+   color: rgba(255, 90, 90, 0.72);
+}
+
+.edu-m-item[data-type*="Diplom"] .edu-m-ul li::marker,
+.edu-m-item[data-type*="DIPLOM"] .edu-m-ul li::marker {
+   color: rgba(255, 210, 80, 0.72);
+}
+
 /* ===== Tint por tipo: borde + fondo sutil (md/lg) ===== */
 
 /* Base: asegura que el fondo pueda tener overlay sin romper nada */

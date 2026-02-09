@@ -1,0 +1,234 @@
+/* ======================
+   PRELOADER (v2)
+   ====================== */
+
+.preloader {
+   position: fixed;
+   inset: 0;
+   background: rgba(0, 0, 0, 0.88);
+   display: grid;
+   place-items: center;
+   z-index: 999999;
+   transition:
+      opacity 900ms ease,
+      visibility 900ms ease;
+}
+
+.preloader.is-hidden {
+   opacity: 0;
+   visibility: hidden;
+   pointer-events: none;
+}
+
+/* Card */
+.preloader__card {
+   width: min(520px, 92vw);
+   border-radius: 18px;
+   padding: 22px 22px 18px;
+   background: rgba(12, 14, 14, 0.7);
+   border: 1px solid rgba(255, 255, 255, 0.1);
+   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+   backdrop-filter: blur(8px);
+   transform: translateY(0);
+   opacity: 1;
+   transition:
+      transform 900ms ease,
+      opacity 900ms ease;
+}
+
+.preloader.is-done .preloader__card {
+   /* se “desarma” suave cuando termina */
+   transform: translateY(8px) scale(0.98);
+   opacity: 0.35;
+}
+
+/* Top row */
+.preloader__top {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 18px;
+}
+
+.preloader__title {
+   font-size: 28px;
+   font-weight: 800;
+   letter-spacing: -0.02em;
+   color: rgba(255, 255, 255, 0.92);
+}
+
+/* Ring */
+.preloader__ring {
+   position: relative;
+   width: 104px;
+   height: 104px;
+   flex: 0 0 auto;
+   display: grid;
+   place-items: center;
+}
+
+.preloader__ring svg {
+   width: 104px;
+   height: 104px;
+   transform: rotate(-90deg);
+}
+
+.ring__track {
+   fill: none;
+   stroke: rgba(255, 255, 255, 0.1);
+   stroke-width: 10;
+}
+
+.ring__bar {
+   fill: none;
+   stroke: rgba(255, 255, 255, 0.88);
+   stroke-width: 10;
+   stroke-linecap: round;
+   stroke-dasharray: 289;
+   stroke-dashoffset: 289;
+   transition: stroke-dashoffset 240ms ease;
+   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+}
+
+.preloader__pct {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   font-weight: 900;
+   font-size: 18px;
+   color: rgba(255, 255, 255, 0.94);
+   letter-spacing: -0.02em;
+   line-height: 1;
+   pointer-events: none;
+}
+
+/* Status lines */
+.preloader__status {
+   margin-top: 14px;
+   display: grid;
+   gap: 6px;
+}
+
+.pl-line {
+   font-size: 14px;
+   color: rgba(255, 255, 255, 0.58);
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   transition: color 240ms ease;
+}
+
+.pl-line::before {
+   content: "";
+   width: 8px;
+   height: 8px;
+   border-radius: 50%;
+   background: rgba(255, 255, 255, 0.16);
+   box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+   transition: 240ms ease;
+}
+
+.pl-line.is-active {
+   color: rgba(255, 255, 255, 0.88);
+}
+.pl-line.is-active::before {
+   background: rgba(255, 255, 255, 0.88);
+   box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
+}
+
+/* DONE state: deja SOLO el listo + check (centrado y grande) */
+.preloader__done {
+   display: none;
+}
+
+.preloader.is-done .preloader__top,
+.preloader.is-done .preloader__status {
+   display: none;
+}
+
+.preloader.is-done .preloader__card {
+   width: min(420px, 92vw);
+   padding: 26px 22px;
+   display: grid;
+   place-items: center;
+   opacity: 1;
+   transform: translateY(0) scale(1);
+}
+
+.preloader.is-done .preloader__done {
+   display: grid;
+   place-items: center;
+   gap: 10px;
+   text-align: center;
+}
+
+.preloader__done .check {
+   width: 64px;
+   height: 64px;
+   border-radius: 999px;
+   display: grid;
+   place-items: center;
+   border: 1px solid rgba(255, 255, 255, 0.18);
+   background: rgba(255, 255, 255, 0.1);
+   color: rgba(255, 255, 255, 0.92);
+   font-size: 34px;
+   font-weight: 900;
+   animation: plPop 650ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.preloader__done .done-text {
+   font-size: 26px;
+   font-weight: 900;
+   letter-spacing: -0.02em;
+   color: rgba(255, 255, 255, 0.94);
+   animation: plFadeUp 700ms ease both;
+}
+
+@keyframes plPop {
+   0% {
+      transform: scale(0.75);
+      opacity: 0;
+   }
+   60% {
+      transform: scale(1.08);
+      opacity: 1;
+   }
+   100% {
+      transform: scale(1);
+      opacity: 1;
+   }
+}
+@keyframes plFadeUp {
+   0% {
+      transform: translateY(10px);
+      opacity: 0;
+   }
+   100% {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+
+/* Ocultar página hasta listo */
+body.app-preloading #page-scroll,
+body.app-preloading nav,
+body.app-preloading .side-rails {
+   visibility: hidden;
+}
+
+body.app-ready #page-scroll,
+body.app-ready nav,
+body.app-ready .side-rails {
+   visibility: visible;
+}
+
+/* Pausa animaciones CSS mientras precarga */
+body.app-preloading * {
+   animation-play-state: paused !important;
+}
+
+/* Cuando está listo, se reanudan */
+body.app-ready * {
+   animation-play-state: running !important;
+}

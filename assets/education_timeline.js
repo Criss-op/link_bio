@@ -47,8 +47,32 @@
       const oYear = $("#edu-o-year", overlay);
       const oLogo = $("#edu-o-logo", overlay);
       const oBullets = $("#edu-o-bullets", overlay);
+      const panel = $(".edu-overlay__panel", overlay);
+      const liftCursorAboveOverlay = () => {
+         const els = document.querySelectorAll(
+            ".cursor-dot, .cursor-ring, .cursor-outline, #cursor-dot, #cursor-ring",
+         );
+
+         els.forEach((el) => {
+            if (!el) return;
+
+            // Saca el cursor del contenedor oscurecido
+            if (el.parentElement !== document.body) {
+               document.body.appendChild(el);
+            }
+
+            // Asegura que quede por encima y sin efectos raros
+            el.style.position = "fixed";
+            el.style.pointerEvents = "none";
+            el.style.zIndex = "20000";
+            el.style.opacity = "1";
+            el.style.filter = "none";
+            el.style.mixBlendMode = "normal";
+         });
+      };
 
       const close = () => {
+         if (panel) panel.removeAttribute("data-type");
          overlay.classList.remove("is-open");
          document.documentElement.classList.remove("edu-modal-open");
          document.body.classList.remove("edu-modal-open");
@@ -57,6 +81,7 @@
       const openFromCard = (card) => {
          const d = card.dataset || {};
          const type = d.type || "";
+         if (panel) panel.setAttribute("data-type", type);
          const title = d.title || "";
          const org = d.org || "";
          const year = d.year || "";
@@ -64,7 +89,9 @@
 
          let bullets = [];
          try {
-            bullets = JSON.parse(d.bullets || "[]");
+            const raw = decodeURIComponent(d.bullets || "%5B%5D"); // "%5B%5D" = "[]"
+            const parsed = JSON.parse(raw);
+            bullets = Array.isArray(parsed) ? parsed : [];
          } catch {
             bullets = [];
          }
@@ -81,7 +108,7 @@
 
          if (oBullets) {
             oBullets.innerHTML = "";
-            bullets.slice(0, 4).forEach((b) => {
+            bullets.forEach((b) => {
                const li = document.createElement("li");
                li.textContent = b;
                oBullets.appendChild(li);
@@ -90,6 +117,7 @@
 
          overlay.classList.add("is-open");
          document.documentElement.classList.add("edu-modal-open");
+         liftCursorAboveOverlay();
          document.body.classList.add("edu-modal-open");
       };
 
